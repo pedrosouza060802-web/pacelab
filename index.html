@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0c0c10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PaceLab">
+<link rel="manifest" href="manifest.json">
+<title>PaceLab</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c10;
+  --bg2: #111116;
+  --surface: #18181f;
+  --border: #252530;
+  --border2: #1e1e28;
+  --text: #e8e8f0;
+  --muted: #52526a;
+  --accent: #ff4d2e;
+  --accent2: #ff8c42;
+  --blue: #4a9eff;
+  --green: #2dce7a;
+  --purple: #a78bfa;
+  --red: #ff4d2e;
+  --font-mono: 'DM Mono', monospace;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  display: flex;
+  flex-direction: column;
+  overscroll-behavior: none;
+}
+
+/* LAYOUT */
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+
+/* TOP BAR */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.topbar-logo {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  color: var(--text);
+  line-height: 1;
+}
+.topbar-logo span { color: var(--accent); }
+.topbar-pace {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-align: right;
+}
+.topbar-pace strong { color: var(--green); font-size: 0.85rem; display: block; }
+
+/* TABS */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg2);
+}
+.tab {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  font-family: var(--font-mono);
+}
+.tab.active { color: var(--text); border-bottom-color: var(--accent); }
+.tab-icon { font-size: 1rem; display: block; margin-bottom: 0.15rem; }
+
+/* PAGES */
+.pages { flex: 1; overflow: hidden; position: relative; }
+.page {
+  position: absolute; inset: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem 1.25rem 2rem;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.page.active { display: block; opacity: 1; }
+
+/* SECTION TITLES */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* UPLOAD ZONE */
+.upload-zone {
+  border: 1.5px dashed var(--border2);
+  border-radius: 12px;
+  padding: 2rem 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: var(--surface);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.upload-zone.drag { border-color: var(--accent); background: rgba(255,77,46,0.05); }
+.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.upload-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.upload-zone h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
+.upload-zone p { font-size: 0.7rem; color: var(--muted); font-family: var(--font-mono); }
+.upload-formats {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+.fmt-badge {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  letter-spacing: 1px;
+}
+
+/* PROCESSING */
+.processing-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  display: none;
+}
+.processing-card.active { display: block; }
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.processing-card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.25rem; }
+.processing-card p { font-size: 0.68rem; color: var(--muted); font-family: var(--font-mono); }
+
+/* RESULT CARD */
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  display: none;
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.result-card.active { display: block; }
+.result-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.result-header h3 { font-size: 0.85rem; font-weight: 700; }
+.result-header .result-date { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); }
+.result-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+.result-stat {
+  padding: 0.9rem 0.75rem;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.result-stat:last-child { border-right: none; }
+.result-stat .rs-val {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--text);
+}
+.result-stat .rs-label {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+.result-insight {
+  padding: 1rem 1.25rem;
+  font-size: 0.72rem;
+  line-height: 1.6;
+  color: var(--text);
+  background: rgba(255,77,46,0.04);
+  border-left: 3px solid var(--accent);
+  margin: 0.75rem;
+  border-radius: 0 6px 6px 0;
+}
+.result-insight strong { color: var(--accent); }
+
+/* ADJUSTMENT CARD */
+.adjustment-card {
+  background: linear-gradient(135deg, rgba(45,206,122,0.08), rgba(74,158,255,0.05));
+  border: 1px solid rgba(45,206,122,0.2);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: none;
+  animation: slideUp 0.4s ease 0.1s both;
+}
+.adjustment-card.active { display: block; }
+.adj-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.adj-header h3 { font-size: 0.85rem; font-weight: 700; color: var(--green); }
+.adj-header .adj-icon { font-size: 1.1rem; }
+.adj-changes { display: flex; flex-direction: column; gap: 0.5rem; }
+.adj-change {
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+.adj-change .ch-day {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--accent2);
+  flex-shrink: 0;
+  min-width: 70px;
+  padding-top: 0.1rem;
+}
+.adj-change .ch-text { color: var(--text); }
+.adj-change .ch-text em { color: var(--green); font-style: normal; font-weight: 700; }
+
+/* HISTORY */
+.history-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.history-item:hover { border-color: var(--muted); }
+.history-icon { font-size: 1.5rem; flex-shrink: 0; }
+.history-info { flex: 1; min-width: 0; }
+.history-title { font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.history-meta { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; }
+.history-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; flex-shrink: 0; }
+.history-pace { font-family: var(--font-display); font-size: 1.3rem; color: var(--accent); line-height: 1; }
+.history-dist { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); }
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: color 0.2s;
+}
+.delete-btn:hover { color: var(--accent); }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+}
+.empty-state .es-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
+.empty-state p { font-size: 0.75rem; font-family: var(--font-mono); line-height: 1.6; }
+
+/* PLAN PAGE */
+.plan-summary {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.plan-header {
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(255,77,46,0.12), transparent);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.plan-header h2 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 1px; }
+.plan-version { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); }
+.plan-days { }
+.plan-day {
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid var(--border2);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  transition: background 0.15s;
+}
+.plan-day:last-child { border-bottom: none; }
+.plan-day:hover { background: rgba(255,255,255,0.02); }
+.pd-day {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--muted);
+  min-width: 60px;
+  padding-top: 0.15rem;
+  flex-shrink: 0;
+}
+.pd-info { flex: 1; }
+.pd-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.2rem; }
+.pd-desc { font-size: 0.65rem; color: var(--muted); line-height: 1.5; }
+.pd-badge {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  align-self: flex-start;
+  margin-top: 0.1rem;
+}
+.badge-easy { background: rgba(45,206,122,0.15); color: var(--green); }
+.badge-tempo { background: rgba(255,140,66,0.15); color: var(--accent2); }
+.badge-interval { background: rgba(255,77,46,0.15); color: var(--accent); }
+.badge-long { background: rgba(74,158,255,0.15); color: var(--blue); }
+.badge-rest { background: rgba(82,82,106,0.2); color: var(--muted); }
+.badge-updated { background: rgba(167,139,250,0.15); color: var(--purple); }
+
+/* STATS PAGE */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+}
+.stat-box .sb-val {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--text);
+}
+.stat-box .sb-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 0.3rem;
+}
+.stat-box.accent .sb-val { color: var(--accent); }
+.stat-box.green .sb-val { color: var(--green); }
+.stat-box.blue .sb-val { color: var(--blue); }
+
+/* TREND CHART */
+.trend-chart {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.trend-chart h3 { font-size: 0.7rem; font-family: var(--font-mono); color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
+.chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 80px; }
+.chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+.chart-bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  background: var(--border);
+  transition: background 0.3s, height 0.5s ease;
+  min-height: 4px;
+}
+.chart-bar.current { background: var(--accent); }
+.chart-bar-label { font-family: var(--font-mono); font-size: 0.5rem; color: var(--muted); text-align: center; }
+
+/* SETTINGS PAGE */
+.settings-section { margin-bottom: 1.5rem; }
+.settings-row {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.settings-row:hover { border-color: var(--muted); }
+.settings-row .sr-label { font-size: 0.8rem; font-weight: 600; }
+.settings-row .sr-sub { font-size: 0.62rem; color: var(--muted); margin-top: 0.15rem; font-family: var(--font-mono); }
+.settings-row .sr-value { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); }
+.settings-row .sr-arrow { color: var(--muted); font-size: 0.8rem; }
+
+.danger-btn {
+  width: 100%;
+  background: rgba(255,77,46,0.1);
+  border: 1px solid rgba(255,77,46,0.3);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.danger-btn:hover { background: rgba(255,77,46,0.2); }
+
+/* STORAGE BAR */
+.storage-bar-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.storage-bar-wrap .sb-label { font-size: 0.7rem; font-weight: 600; margin-bottom: 0.25rem; display: flex; justify-content: space-between; }
+.storage-bar-wrap .sb-sub { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); margin-bottom: 0.75rem; }
+.storage-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.storage-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width 0.5s, background 0.3s; }
+.storage-fill.warn { background: var(--accent2); }
+.storage-fill.danger { background: var(--accent); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: calc(80px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--text);
+  color: var(--bg);
+  padding: 0.6rem 1.25rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+  z-index: 100;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* PROFILE CARD */
+.profile-card {
+  background: linear-gradient(135deg, rgba(255,77,46,0.1), rgba(74,158,255,0.05));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.profile-avatar {
+  width: 50px; height: 50px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: white;
+  flex-shrink: 0;
+}
+.profile-info .pi-name { font-size: 0.9rem; font-weight: 800; }
+.profile-info .pi-meta { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; }
+.profile-info .pi-vo2 { font-family: var(--font-mono); font-size: 0.65rem; color: var(--green); margin-top: 0.15rem; }
+</style>
+</head>
+<body>
+<div class="app-shell">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">Pace<span>Lab</span></div>
+    <div class="topbar-pace" id="topbarPace">
+      <strong id="topbarPaceVal">—:——</strong>
+      pace atual
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('upload')">
+      <span class="tab-icon">⬆</span>Upload
+    </div>
+    <div class="tab" onclick="switchTab('plan')">
+      <span class="tab-icon">📋</span>Plano
+    </div>
+    <div class="tab" onclick="switchTab('history')">
+      <span class="tab-icon">📂</span>Histórico
+    </div>
+    <div class="tab" onclick="switchTab('stats')">
+      <span class="tab-icon">📊</span>Stats
+    </div>
+    <div class="tab" onclick="switchTab('settings')">
+      <span class="tab-icon">⚙</span>Config
+    </div>
+  </div>
+
+  <!-- PAGES -->
+  <div class="pages">
+
+    <!-- UPLOAD PAGE -->
+    <div class="page active" id="page-upload">
+      <div class="section-label">Novo treino</div>
+
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept=".gpx,.fit" multiple onchange="handleFiles(this.files)">
+        <div class="upload-icon">🏃</div>
+        <h3>Soltar arquivo aqui</h3>
+        <p>Toque para selecionar ou arraste</p>
+        <div class="upload-formats">
+          <span class="fmt-badge">GPX</span>
+          <span class="fmt-badge">FIT</span>
+        </div>
+      </div>
+
+      <div class="processing-card" id="processingCard">
+        <div class="spinner"></div>
+        <h3 id="processingTitle">Analisando treino...</h3>
+        <p id="processingMsg">Lendo dados GPS e cardíacos</p>
+      </div>
+
+      <div class="result-card" id="resultCard">
+        <div class="result-header">
+          <h3 id="resultName">Evening Run</h3>
+          <span class="result-date" id="resultDate">—</span>
+        </div>
+        <div class="result-stats">
+          <div class="result-stat">
+            <div class="rs-val" id="rsDist">—</div>
+            <div class="rs-label">km</div>
+          </div>
+          <div class="result-stat">
+            <div class="rs-val" id="rsPace">—:——</div>
+            <div class="rs-label">pace</div>
+          </div>
+          <div class="result-stat">
+            <div class="rs-val" id="rsHR">—</div>
+            <div class="rs-label">bpm avg</div>
+          </div>
+        </div>
+        <div class="result-insight" id="resultInsight"></div>
+      </div>
+
+      <div class="adjustment-card" id="adjustmentCard">
+        <div class="adj-header">
+          <span class="adj-icon">🔄</span>
+          <h3>Plano ajustado automaticamente</h3>
+        </div>
+        <div class="adj-changes" id="adjChanges"></div>
+      </div>
+    </div>
+
+    <!-- PLAN PAGE -->
+    <div class="page" id="page-plan">
+      <div class="section-label">Plano da semana</div>
+      <div class="plan-summary" id="planSummary">
+        <div class="plan-header">
+          <h2 id="planTitle">PLANO 4:14</h2>
+          <span class="plan-version" id="planVersion">v1 · gerado agora</span>
+        </div>
+        <div class="plan-days" id="planDays"></div>
+      </div>
+    </div>
+
+    <!-- HISTORY PAGE -->
+    <div class="page" id="page-history">
+      <div class="section-label">Treinos salvos</div>
+      <div id="historyList"></div>
+    </div>
+
+    <!-- STATS PAGE -->
+    <div class="page" id="page-stats">
+      <div class="section-label">Visão geral</div>
+
+      <div class="profile-card">
+        <div class="profile-avatar" id="profileInitial">P</div>
+        <div class="profile-info">
+          <div class="pi-name" id="profileName">Corredor</div>
+          <div class="pi-meta" id="profileMeta">23 anos · 5 dias/semana</div>
+          <div class="pi-vo2" id="profileVo2">VO2max estimado: —</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box accent">
+          <div class="sb-val" id="statAvgPace">—:——</div>
+          <div class="sb-label">Pace médio</div>
+        </div>
+        <div class="stat-box">
+          <div class="sb-val" id="statRuns">0</div>
+          <div class="sb-label">Treinos</div>
+        </div>
+        <div class="stat-box green">
+          <div class="sb-val" id="statKm">0</div>
+          <div class="sb-label">km total</div>
+        </div>
+        <div class="stat-box blue">
+          <div class="sb-val" id="statAvgHR">—</div>
+          <div class="sb-label">HR médio</div>
+        </div>
+      </div>
+
+      <div class="section-label">Tendência de pace</div>
+      <div class="trend-chart">
+        <div class="chart-bars" id="trendBars"></div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PAGE -->
+    <div class="page" id="page-settings">
+      <div class="section-label">Perfil</div>
+
+      <div class="settings-section">
+        <div class="settings-row" onclick="editSetting('name')">
+          <div>
+            <div class="sr-label">Nome</div>
+            <div class="sr-sub" id="settingName">Pedro</div>
+          </div>
+          <span class="sr-arrow">›</span>
+        </div>
+        <div class="settings-row" onclick="editSetting('age')">
+          <div>
+            <div class="sr-label">Idade</div>
+            <div class="sr-sub" id="settingAge">23 anos</div>
+          </div>
+          <span class="sr-arrow">›</span>
+        </div>
+        <div class="settings-row" onclick="editSetting('targetPace')">
+          <div>
+            <div class="sr-label">Pace alvo</div>
+            <div class="sr-sub" id="settingTargetPace">4:14 min/km</div>
+          </div>
+          <span class="sr-value">›</span>
+        </div>
+        <div class="settings-row" onclick="editSetting('days')">
+          <div>
+            <div class="sr-label">Dias de treino / semana</div>
+            <div class="sr-sub" id="settingDays">5 dias</div>
+          </div>
+          <span class="sr-arrow">›</span>
+        </div>
+        <div class="settings-row" onclick="editSetting('hrmax')">
+          <div>
+            <div class="sr-label">HR máximo</div>
+            <div class="sr-sub" id="settingHrmax">197 bpm (estimado)</div>
+          </div>
+          <span class="sr-arrow">›</span>
+        </div>
+      </div>
+
+      <div class="section-label">Armazenamento</div>
+      <div class="storage-bar-wrap">
+        <div class="sb-label">
+          <span>Espaço usado</span>
+          <span id="storageText">calculando...</span>
+        </div>
+        <div class="sb-sub" id="storageFiles">0 treinos salvos</div>
+        <div class="storage-bar">
+          <div class="storage-fill" id="storageFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-row" onclick="pruneOldWorkouts()">
+          <div>
+            <div class="sr-label">🧹 Limpar treinos antigos</div>
+            <div class="sr-sub">Remove treinos com mais de 90 dias</div>
+          </div>
+          <span class="sr-arrow">›</span>
+        </div>
+      </div>
+
+      <button class="danger-btn" onclick="confirmClearAll()">🗑 Apagar todos os dados</button>
+    </div>
+
+  </div><!-- /pages -->
+</div><!-- /app-shell -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── IndexedDB ───────────────────────────────────────────────────
+const DB_NAME = 'pacelab', DB_VER = 1;
+let db;
+
+function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open(DB_NAME, DB_VER);
+    req.onupgradeneeded = e => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('workouts')) {
+        const ws = d.createObjectStore('workouts', { keyPath: 'id' });
+        ws.createIndex('date', 'date');
+      }
+      if (!d.objectStoreNames.contains('settings')) {
+        d.createObjectStore('settings', { keyPath: 'key' });
+      }
+      if (!d.objectStoreNames.contains('plan')) {
+        d.createObjectStore('plan', { keyPath: 'key' });
+      }
+    };
+    req.onsuccess = e => { db = e.target.result; res(db); };
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbGet(store, key) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbPut(store, value) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).put(value);
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbDelete(store, key) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).delete(key);
+    req.onsuccess = () => res();
+    req.onerror = () => rej(req.error);
+  });
+}
+
+function dbGetAll(store) {
+  return new Promise((res, rej) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = () => res(req.result);
+    req.onerror = () => rej(req.error);
+  });
+}
+
+// ─── Settings ────────────────────────────────────────────────────
+let settings = {
+  name: 'Pedro',
+  age: 23,
+  targetPaceSec: 254, // 4:14
+  days: 5,
+  hrmax: 197,
+  vo2max: 57
+};
+
+async function loadSettings() {
+  const saved = await dbGet('settings', 'profile');
+  if (saved) settings = { ...settings, ...saved.value };
+  renderSettings();
+}
+
+async function saveSettings() {
+  await dbPut('settings', { key: 'profile', value: settings });
+  renderSettings();
+}
+
+function renderSettings() {
+  const p = settings;
+  const pm = Math.floor(p.targetPaceSec/60), ps = p.targetPaceSec%60;
+  el('settingName').textContent = p.name;
+  el('settingAge').textContent = p.age + ' anos';
+  el('settingTargetPace').textContent = `${pm}:${String(ps).padStart(2,'0')} min/km`;
+  el('settingDays').textContent = p.days + ' dias';
+  el('settingHrmax').textContent = p.hrmax + ' bpm';
+  el('profileInitial').textContent = p.name[0].toUpperCase();
+  el('profileName').textContent = p.name;
+  el('profileMeta').textContent = `${p.age} anos · ${p.days} dias/semana`;
+  el('profileVo2').textContent = `VO2max estimado: ~${p.vo2max} ml/kg/min`;
+  const pm2 = Math.floor(p.targetPaceSec/60), ps2 = p.targetPaceSec%60;
+  el('topbarPaceVal').textContent = `${pm2}:${String(ps2).padStart(2,'0')}`;
+}
+
+function editSetting(key) {
+  const labels = { name:'Nome', age:'Idade', targetPace:'Pace alvo (ex: 4:14)', days:'Dias/semana', hrmax:'HR máximo (bpm)' };
+  const current = {
+    name: settings.name,
+    age: settings.age,
+    targetPace: `${Math.floor(settings.targetPaceSec/60)}:${String(settings.targetPaceSec%60).padStart(2,'0')}`,
+    days: settings.days,
+    hrmax: settings.hrmax
+  }[key];
+  const val = prompt(labels[key], current);
+  if (val === null) return;
+  if (key === 'name') settings.name = val.trim() || settings.name;
+  else if (key === 'age') { const v = parseInt(val); if (!isNaN(v)) settings.age = v; }
+  else if (key === 'targetPace') {
+    const m = val.match(/^(\d+):(\d{2})$/);
+    if (m) settings.targetPaceSec = parseInt(m[1])*60 + parseInt(m[2]);
+  }
+  else if (key === 'days') { const v = parseInt(val); if (v>0&&v<=7) settings.days = v; }
+  else if (key === 'hrmax') { const v = parseInt(val); if (!isNaN(v)) settings.hrmax = v; }
+  saveSettings();
+  toast('Configuração salva');
+}
+
+// ─── GPX Parser ──────────────────────────────────────────────────
+function parseGPX(text) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, 'text/xml');
+  const trkpts = doc.querySelectorAll('trkpt');
+  if (!trkpts.length) throw new Error('Nenhum ponto GPS encontrado');
+
+  const NS_EXT = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
+  const points = [];
+  const hrValues = [];
+
+  trkpts.forEach(pt => {
+    const lat = parseFloat(pt.getAttribute('lat'));
+    const lon = parseFloat(pt.getAttribute('lon'));
+    const ele = parseFloat(pt.querySelector('ele')?.textContent || '0');
+    const timeStr = pt.querySelector('time')?.textContent;
+    const time = timeStr ? new Date(timeStr) : null;
+
+    // HR from Garmin extension
+    let hr = null;
+    const hrEl = pt.querySelector('hr') ||
+      pt.getElementsByTagNameNS(NS_EXT, 'hr')[0];
+    if (hrEl) hr = parseInt(hrEl.textContent);
+    if (hr && !isNaN(hr)) hrValues.push(hr);
+
+    points.push({ lat, lon, ele, time, hr });
+  });
+
+  return calcStats(points, hrValues, doc);
+}
+
+// ─── FIT Parser (simplified) ─────────────────────────────────────
+function parseFIT(buffer) {
+  // Minimal FIT parser - extract records
+  const bytes = new Uint8Array(buffer);
+  const points = [];
+  const hrValues = [];
+
+  // FIT header: 14 bytes
+  let offset = 14;
+  const dataSize = new DataView(buffer).getUint32(4, true);
+  const endOffset = 14 + dataSize;
+
+  const localMsgDefs = {};
+  let totalDist = 0, startTime = null, endTime = null;
+  const FIT_EPOCH = 631065600; // Jan 1, 1989 in unix seconds
+
+  while (offset < endOffset && offset < bytes.length - 2) {
+    const recordHeader = bytes[offset];
+    offset++;
+
+    const isDefinition = (recordHeader & 0x40) !== 0;
+    const localMsgType = recordHeader & 0x0F;
+
+    if (isDefinition) {
+      offset++; // reserved
+      const arch = bytes[offset++];
+      const globalMsgNum = arch === 0
+        ? bytes[offset] | (bytes[offset+1] << 8)
+        : (bytes[offset] << 8) | bytes[offset+1];
+      offset += 2;
+      const numFields = bytes[offset++];
+      const fields = [];
+      for (let i = 0; i < numFields; i++) {
+        fields.push({ defNum: bytes[offset], size: bytes[offset+1], type: bytes[offset+2] });
+        offset += 3;
+      }
+      localMsgDefs[localMsgType] = { globalMsgNum, arch, fields };
+
+      // Developer fields
+      if (recordHeader & 0x20) {
+        const numDevFields = bytes[offset++];
+        for (let i = 0; i < numDevFields; i++) offset += 3;
+      }
+    } else {
+      const def = localMsgDefs[localMsgType];
+      if (!def) break;
+      const recStart = offset;
+      const recData = {};
+
+      def.fields.forEach(f => {
+        if (offset + f.size > bytes.length) return;
+        const view = new DataView(buffer, offset, f.size);
+        let val;
+        if (f.size === 4) val = def.arch === 0 ? view.getUint32(0, true) : view.getUint32(0, false);
+        else if (f.size === 2) val = def.arch === 0 ? view.getUint16(0, true) : view.getUint16(0, false);
+        else if (f.size === 1) val = view.getUint8(0);
+        else val = 0;
+        recData[f.defNum] = val;
+        offset += f.size;
+      });
+
+      // Message 20 = record
+      if (def.globalMsgNum === 20) {
+        const lat = recData[0] !== undefined ? recData[0] * (180 / Math.pow(2, 31)) : null;
+        const lon = recData[1] !== undefined ? recData[1] * (180 / Math.pow(2, 31)) : null;
+        const dist = recData[5] !== undefined ? recData[5] / 100 : null; // cm → m
+        const hr = recData[3] !== undefined && recData[3] < 250 ? recData[3] : null;
+        const ts = recData[253] !== undefined ? new Date((recData[253] + FIT_EPOCH) * 1000) : null;
+        const alt = recData[2] !== undefined ? recData[2] / 5 - 500 : 0;
+
+        if (ts) {
+          if (!startTime) startTime = ts;
+          endTime = ts;
+        }
+        if (dist !== null) totalDist = Math.max(totalDist, dist);
+        if (hr) hrValues.push(hr);
+        if (lat && lon && Math.abs(lat) < 90 && Math.abs(lon) < 180) {
+          points.push({ lat, lon, ele: alt, time: ts, hr });
+        }
+      }
+    }
+  }
+
+  if (!points.length) throw new Error('Arquivo FIT sem dados de posição');
+  return calcStats(points, hrValues, null, totalDist, startTime, endTime);
+}
+
+function calcStats(points, hrValues, gpxDoc, fitDist, fitStart, fitEnd) {
+  // Distance
+  let dist = fitDist || 0;
+  if (!fitDist && points.length > 1) {
+    for (let i = 1; i < points.length; i++) {
+      dist += haversine(points[i-1], points[i]);
+    }
+  }
+
+  // Time
+  const startTime = fitStart || points[0]?.time;
+  const endTime = fitEnd || points[points.length-1]?.time;
+  const durationSec = startTime && endTime ? (endTime - startTime) / 1000 : 0;
+
+  // Moving time (simple: remove stops > 5s without movement)
+  let movingTime = durationSec;
+  if (points.length > 1 && points[0]?.time) {
+    let moving = 0;
+    for (let i = 1; i < points.length; i++) {
+      const dt = (points[i].time - points[i-1].time) / 1000;
+      const dd = haversine(points[i-1], points[i]);
+      const speed = dd / dt; // m/s
+      if (speed > 0.5) moving += dt; // > 1.8 km/h = moving
+    }
+    movingTime = moving || durationSec;
+  }
+
+  const paceSec = dist > 0 ? movingTime / (dist / 1000) : 0;
+  const avgHR = hrValues.length ? Math.round(hrValues.reduce((a,b)=>a+b,0)/hrValues.length) : null;
+  const maxHR = hrValues.length ? Math.max(...hrValues) : null;
+
+  // Elevation
+  let eleGain = 0;
+  for (let i = 1; i < points.length; i++) {
+    const dEle = points[i].ele - points[i-1].ele;
+    if (dEle > 0) eleGain += dEle;
+  }
+
+  // Track name from GPX
+  const name = gpxDoc?.querySelector('name')?.textContent || 'Corrida';
+
+  return {
+    name,
+    date: startTime || new Date(),
+    distKm: Math.round(dist / 10) / 100,
+    durationSec: Math.round(durationSec),
+    movingTimeSec: Math.round(movingTime),
+    paceSec: Math.round(paceSec),
+    avgHR,
+    maxHR,
+    eleGain: Math.round(eleGain),
+    pointCount: points.length
+  };
+}
+
+function haversine(p1, p2) {
+  const R = 6371000;
+  const dLat = (p2.lat - p1.lat) * Math.PI / 180;
+  const dLon = (p2.lon - p1.lon) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(p1.lat*Math.PI/180)*Math.cos(p2.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// ─── Plan Engine ─────────────────────────────────────────────────
+const BASE_PLAN = [
+  { day: 'Segunda', type: 'easy',     title: 'Corrida fácil', badge: 'badge-easy',     desc: 'Zona 2 — pace confortável, conversa possível' },
+  { day: 'Terça',   type: 'rest',     title: 'Descanso ativo', badge: 'badge-rest',    desc: 'Caminhada leve ou alongamento' },
+  { day: 'Quarta',  type: 'tempo',    title: 'Tempo Run',      badge: 'badge-tempo',   desc: 'Aquecimento + bloco no pace alvo + volta' },
+  { day: 'Quinta',  type: 'interval', title: 'Intervalados',   badge: 'badge-interval',desc: 'Repetições curtas acima do pace alvo + recuperação' },
+  { day: 'Sexta',   type: 'rest',     title: 'Descanso',       badge: 'badge-rest',    desc: 'Recuperação total' },
+  { day: 'Sábado',  type: 'long',     title: 'Long Run',       badge: 'badge-long',    desc: 'Ritmo bem tranquilo, volume maior' },
+  { day: 'Domingo', type: 'rest',     title: 'Descanso',       badge: 'badge-rest',    desc: 'Recuperação ativa ou folga total' }
+];
+
+let currentPlan = null;
+
+async function loadPlan() {
+  const saved = await dbGet('plan', 'current');
+  if (saved) {
+    currentPlan = saved.value;
+  } else {
+    currentPlan = generateBasePlan();
+    await savePlan();
+  }
+  renderPlan();
+}
+
+function generateBasePlan() {
+  const tgt = settings.targetPaceSec;
+  const pm = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+
+  return {
+    title: `PLANO ${pm(tgt)}`,
+    version: 1,
+    updatedAt: Date.now(),
+    days: BASE_PLAN.map(d => ({
+      ...d,
+      desc: buildDayDesc(d.type, tgt)
+    }))
+  };
+}
+
+function buildDayDesc(type, tgtSec) {
+  const pm = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+  const easy = tgtSec + 60;
+  const tempo = tgtSec + 10;
+  const interval = tgtSec - 15;
+  const longPace = tgtSec + 80;
+  switch(type) {
+    case 'easy':     return `6 km a ${pm(easy)}–${pm(easy+20)} · HR < ${Math.round(settings.hrmax * 0.73)} bpm`;
+    case 'tempo':    return `1km aquecimento + 4km a ${pm(tempo)}–${pm(tempo+10)} + 1km volta · HR 158–170`;
+    case 'interval': return `6× 800m a ${pm(interval)} com 90s caminhada · HR > 170`;
+    case 'long':     return `10–12 km a ${pm(longPace)} · ritmo conversa`;
+    case 'rest':     return 'Recuperação — caminhada leve ou folga total';
+    default:         return '';
+  }
+}
+
+async function savePlan() {
+  await dbPut('plan', { key: 'current', value: currentPlan });
+}
+
+function adjustPlan(workout, allWorkouts) {
+  const tgt = settings.targetPaceSec;
+  const pm = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+  const changes = [];
+  let planChanged = false;
+
+  const recent = allWorkouts.slice(-5);
+  const avgPace = recent.length
+    ? recent.reduce((a,w)=>a+w.paceSec,0)/recent.length
+    : workout.paceSec;
+
+  const paceVsTarget = workout.paceSec - tgt;
+  const hrPct = workout.avgHR && settings.hrmax ? workout.avgHR / settings.hrmax : null;
+
+  // Rule 1: Pace much faster than target → athlete is ready to push
+  if (paceVsTarget < -20 && recent.length >= 2) {
+    const newTgt = Math.max(tgt - 5, 210); // don't go below 3:30
+    settings.targetPaceSec = newTgt;
+    saveSettings();
+    currentPlan = generateBasePlan();
+    planChanged = true;
+    changes.push({
+      day: 'Todos os dias',
+      text: `Pace alvo atualizado de ${pm(tgt)} → <em>${pm(newTgt)}</em>. Você está consistentemente mais rápido que o alvo.`
+    });
+  }
+
+  // Rule 2: HR very high (>90% HRmax) at target pace → back off
+  if (hrPct && hrPct > 0.92 && Math.abs(paceVsTarget) < 30) {
+    const easyIdx = currentPlan.days.findIndex(d => d.type === 'easy');
+    if (easyIdx >= 0) {
+      currentPlan.days[easyIdx].desc = `7 km a ${pm(tgt+80)}–${pm(tgt+100)} · recuperação ativa · HR < ${Math.round(settings.hrmax * 0.70)} bpm`;
+      currentPlan.days[easyIdx].badge = 'badge-updated';
+      planChanged = true;
+      changes.push({
+        day: currentPlan.days[easyIdx].day,
+        text: `HR elevado detectado (${workout.avgHR} bpm). Corrida fácil ficou mais leve para priorizar recuperação.`
+      });
+    }
+  }
+
+  // Rule 3: Pace much slower than target → needs more easy volume
+  if (paceVsTarget > 40 && recent.length >= 3) {
+    const longIdx = currentPlan.days.findIndex(d => d.type === 'long');
+    if (longIdx >= 0) {
+      currentPlan.days[longIdx].desc = `12–14 km a ${pm(tgt+90)} · construir base aeróbica`;
+      currentPlan.days[longIdx].badge = 'badge-updated';
+      planChanged = true;
+      changes.push({
+        day: currentPlan.days[longIdx].day,
+        text: `Pace abaixo do alvo. Volume do Long Run aumentado para fortalecer base aeróbica.`
+      });
+    }
+  }
+
+  // Rule 4: Good workout, HR normal → add intensity to intervals
+  if (paceVsTarget < 10 && hrPct && hrPct < 0.88) {
+    const intIdx = currentPlan.days.findIndex(d => d.type === 'interval');
+    if (intIdx >= 0) {
+      currentPlan.days[intIdx].desc = `8× 800m a ${pm(tgt-20)} com 90s caminhada · você está pronto para mais`;
+      currentPlan.days[intIdx].badge = 'badge-updated';
+      planChanged = true;
+      changes.push({
+        day: currentPlan.days[intIdx].day,
+        text: `Desempenho sólido com HR controlado. Intervalados agora com <em>8 repetições</em> (era 6).`
+      });
+    }
+  }
+
+  // Rule 5: Elevation gain high → extra recovery
+  if (workout.eleGain > 80) {
+    const restIdx = currentPlan.days.findIndex(d => d.type === 'rest' && d.day === 'Sexta');
+    if (restIdx >= 0) {
+      currentPlan.days[restIdx].desc = 'Recuperação total obrigatória — ganho de elevação elevado no último treino';
+      planChanged = true;
+      changes.push({
+        day: 'Sexta',
+        text: `Ganho de elevação alto (+${workout.eleGain}m). Descanso de sexta reforçado.`
+      });
+    }
+  }
+
+  if (planChanged) {
+    currentPlan.version = (currentPlan.version || 1) + 1;
+    currentPlan.updatedAt = Date.now();
+    savePlan();
+  }
+
+  return { changes, planChanged };
+}
+
+// ─── File Handling ───────────────────────────────────────────────
+async function handleFiles(files) {
+  if (!files.length) return;
+  const file = files[0];
+  showProcessing(true, 'Lendo arquivo...', file.name);
+
+  try {
+    let workout;
+    const ext = file.name.split('.').pop().toLowerCase();
+
+    if (ext === 'gpx') {
+      const text = await file.text();
+      updateProcessing('Parseando GPS...', 'Calculando distância e pace');
+      await delay(300);
+      workout = parseGPX(text);
+    } else if (ext === 'fit') {
+      const buffer = await file.arrayBuffer();
+      updateProcessing('Decodificando FIT...', 'Formato binário Garmin');
+      await delay(300);
+      workout = parseFIT(buffer);
+    } else {
+      throw new Error('Formato não suportado. Use GPX ou FIT.');
+    }
+
+    workout.id = Date.now().toString();
+    workout.fileName = file.name;
+    workout.date = workout.date instanceof Date ? workout.date.toISOString() : new Date().toISOString();
+
+    updateProcessing('Salvando treino...', 'Persistindo no IndexedDB');
+    await delay(200);
+    await dbPut('workouts', workout);
+
+    updateProcessing('Ajustando plano...', 'Analisando tendências');
+    await delay(400);
+
+    const all = await dbGetAll('workouts');
+    all.sort((a,b) => new Date(a.date) - new Date(b.date));
+    const { changes } = adjustPlan(workout, all);
+
+    // Auto-prune: keep max 50 workouts, delete oldest
+    if (all.length > 50) {
+      const toDelete = all.slice(0, all.length - 50);
+      for (const w of toDelete) await dbDelete('workouts', w.id);
+    }
+
+    showProcessing(false);
+    showResult(workout);
+    showAdjustments(changes);
+    renderPlan();
+    updateStats();
+    updateStorage();
+
+  } catch (err) {
+    showProcessing(false);
+    toast('Erro: ' + err.message);
+    console.error(err);
+  }
+}
+
+function showProcessing(active, title='', msg='') {
+  el('processingCard').classList.toggle('active', active);
+  el('resultCard').classList.remove('active');
+  el('adjustmentCard').classList.remove('active');
+  if (title) el('processingTitle').textContent = title;
+  if (msg) el('processingMsg').textContent = msg;
+}
+
+function updateProcessing(title, msg) {
+  el('processingTitle').textContent = title;
+  el('processingMsg').textContent = msg;
+}
+
+function showResult(w) {
+  el('resultCard').classList.add('active');
+  el('resultName').textContent = w.name || w.fileName?.replace(/\.(gpx|fit)$/i,'') || 'Corrida';
+  el('resultDate').textContent = new Date(w.date).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'});
+  el('rsDist').textContent = w.distKm.toFixed(1);
+  el('rsPace').textContent = fmtPace(w.paceSec);
+  el('rsHR').textContent = w.avgHR || '—';
+
+  // Insight
+  const diff = w.paceSec - settings.targetPaceSec;
+  let insight = '';
+  if (diff < -20) insight = `<strong>🔥 Acima do alvo!</strong> Você rodou ${fmtPace(Math.abs(diff))} mais rápido que o pace alvo. Consistência assim vai baixar o alvo em breve.`;
+  else if (diff < 10) insight = `<strong>✅ No alvo.</strong> Pace de ${fmtPace(w.paceSec)} está exatamente onde deveria estar. Continue assim.`;
+  else if (diff < 40) insight = `<strong>📍 Próximo do alvo.</strong> ${fmtPace(diff)} acima do pace alvo. Normal, especialmente em treinos fáceis ou com elevação.`;
+  else insight = `<strong>🔄 Abaixo do alvo.</strong> Pace de ${fmtPace(w.paceSec)} — faz parte da periodização. Os treinos longos e fáceis devem ser assim.`;
+  if (w.eleGain > 60) insight += ` Elevação de +${w.eleGain}m pode ter puxado o pace para cima.`;
+  el('resultInsight').innerHTML = insight;
+}
+
+function showAdjustments(changes) {
+  if (!changes.length) return;
+  el('adjustmentCard').classList.add('active');
+  el('adjChanges').innerHTML = changes.map(c =>
+    `<div class="adj-change">
+      <span class="ch-day">${c.day}</span>
+      <span class="ch-text">${c.text}</span>
+    </div>`
+  ).join('');
+}
+
+// ─── Plan Render ─────────────────────────────────────────────────
+function renderPlan() {
+  if (!currentPlan) return;
+  const pm2 = Math.floor(settings.targetPaceSec/60), ps2 = settings.targetPaceSec%60;
+  el('planTitle').textContent = `PLANO ${pm2}:${String(ps2).padStart(2,'0')}`;
+  const d = new Date(currentPlan.updatedAt);
+  el('planVersion').textContent = `v${currentPlan.version} · atualizado ${d.toLocaleDateString('pt-BR')}`;
+
+  el('planDays').innerHTML = currentPlan.days.map(d =>
+    `<div class="plan-day">
+      <div class="pd-day">${d.day}</div>
+      <div class="pd-info">
+        <div class="pd-title">${d.title}</div>
+        <div class="pd-desc">${d.desc}</div>
+      </div>
+      <span class="pd-badge ${d.badge}">${badgeLabel(d.type, d.badge)}</span>
+    </div>`
+  ).join('');
+}
+
+function badgeLabel(type, badge) {
+  if (badge === 'badge-updated') return '✦ ajustado';
+  return { easy:'fácil', tempo:'tempo', interval:'interval', long:'longo', rest:'descanso' }[type] || type;
+}
+
+// ─── History Render ──────────────────────────────────────────────
+async function renderHistory() {
+  const all = await dbGetAll('workouts');
+  all.sort((a,b) => new Date(b.date) - new Date(a.date));
+  const list = el('historyList');
+  if (!all.length) {
+    list.innerHTML = `<div class="empty-state">
+      <div class="es-icon">🏃</div>
+      <p>Nenhum treino ainda.<br>Faça upload do primeiro arquivo GPX ou FIT.</p>
+    </div>`;
+    return;
+  }
+  list.innerHTML = all.map(w =>
+    `<div class="history-item">
+      <div class="history-icon">🏃</div>
+      <div class="history-info">
+        <div class="history-title">${w.name || w.fileName || 'Corrida'}</div>
+        <div class="history-meta">${new Date(w.date).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'})} · ${w.distKm.toFixed(2)} km · ${fmtDur(w.movingTimeSec)}</div>
+      </div>
+      <div class="history-stats">
+        <div class="history-pace">${fmtPace(w.paceSec)}</div>
+        <div class="history-dist">${w.avgHR ? '♥ '+w.avgHR : ''}</div>
+      </div>
+      <button class="delete-btn" onclick="deleteWorkout('${w.id}')">✕</button>
+    </div>`
+  ).join('');
+}
+
+async function deleteWorkout(id) {
+  if (!confirm('Apagar este treino?')) return;
+  await dbDelete('workouts', id);
+  renderHistory();
+  updateStats();
+  updateStorage();
+  toast('Treino removido');
+}
+
+// ─── Stats ───────────────────────────────────────────────────────
+async function updateStats() {
+  const all = await dbGetAll('workouts');
+  if (!all.length) return;
+  const totalKm = all.reduce((a,w)=>a+w.distKm,0);
+  const avgPace = all.reduce((a,w)=>a+w.paceSec,0)/all.length;
+  const hrAll = all.filter(w=>w.avgHR).map(w=>w.avgHR);
+  const avgHR = hrAll.length ? Math.round(hrAll.reduce((a,b)=>a+b,0)/hrAll.length) : null;
+
+  el('statRuns').textContent = all.length;
+  el('statKm').textContent = Math.round(totalKm);
+  el('statAvgPace').textContent = fmtPace(Math.round(avgPace));
+  el('statAvgHR').textContent = avgHR || '—';
+
+  // VO2 estimate from best recent pace
+  const recent = all.slice(-3);
+  if (recent.length) {
+    const bestPace = Math.min(...recent.map(w=>w.paceSec));
+    const speedKmh = 3600 / bestPace;
+    const vo2 = Math.round(speedKmh * 3.5);
+    settings.vo2max = vo2;
+    saveSettings();
+  }
+
+  // Trend chart
+  const last8 = all.slice(-8);
+  const maxPace = Math.max(...last8.map(w=>w.paceSec));
+  const minPace = Math.min(...last8.map(w=>w.paceSec));
+  const range = maxPace - minPace || 1;
+  el('trendBars').innerHTML = last8.map((w, i) => {
+    const height = Math.round(((maxPace - w.paceSec) / range) * 70 + 10);
+    const isCurrent = i === last8.length - 1;
+    return `<div class="chart-bar-wrap">
+      <div class="chart-bar ${isCurrent?'current':''}" style="height:${height}px"></div>
+      <div class="chart-bar-label">${fmtPace(w.paceSec)}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── Storage ─────────────────────────────────────────────────────
+async function updateStorage() {
+  const all = await dbGetAll('workouts');
+  const size = JSON.stringify(all).length;
+  const kb = (size / 1024).toFixed(1);
+  const maxKB = 5000;
+  const pct = Math.min((size/1024/maxKB)*100, 100);
+
+  el('storageText').textContent = `${kb} KB`;
+  el('storageFiles').textContent = `${all.length} treinos salvos`;
+  const fill = el('storageFill');
+  fill.style.width = pct + '%';
+  fill.className = 'storage-fill' + (pct>80?' danger':pct>60?' warn':'');
+}
+
+async function pruneOldWorkouts() {
+  const all = await dbGetAll('workouts');
+  const cutoff = Date.now() - 90*24*60*60*1000;
+  const old = all.filter(w => new Date(w.date).getTime() < cutoff);
+  if (!old.length) { toast('Nenhum treino com mais de 90 dias'); return; }
+  if (!confirm(`Remover ${old.length} treino(s) com mais de 90 dias?`)) return;
+  for (const w of old) await dbDelete('workouts', w.id);
+  renderHistory();
+  updateStats();
+  updateStorage();
+  toast(`${old.length} treino(s) removido(s)`);
+}
+
+async function confirmClearAll() {
+  if (!confirm('Apagar TODOS os dados? Essa ação não pode ser desfeita.')) return;
+  const all = await dbGetAll('workouts');
+  for (const w of all) await dbDelete('workouts', w.id);
+  await dbDelete('settings', 'profile');
+  await dbDelete('plan', 'current');
+  settings = { name:'Corredor', age:23, targetPaceSec:254, days:5, hrmax:197, vo2max:57 };
+  currentPlan = generateBasePlan();
+  await savePlan();
+  renderSettings();
+  renderPlan();
+  renderHistory();
+  updateStats();
+  updateStorage();
+  toast('Dados apagados');
+}
+
+// ─── UI Utils ────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const names = ['upload','plan','history','stats','settings'];
+    t.classList.toggle('active', names[i] === name);
+  });
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.toggle('active', p.id === 'page-'+name);
+  });
+  if (name === 'history') renderHistory();
+  if (name === 'stats') updateStats();
+  if (name === 'settings') updateStorage();
+}
+
+function el(id) { return document.getElementById(id); }
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function fmtPace(sec) {
+  if (!sec || isNaN(sec)) return '—:——';
+  return `${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`;
+}
+function fmtDur(sec) {
+  if (!sec) return '—';
+  const m = Math.floor(sec/60), s = sec%60;
+  return m > 60 ? `${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
+}
+function toast(msg) {
+  const t = el('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Drag & drop
+const zone = el('uploadZone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
+zone.addEventListener('drop', e => {
+  e.preventDefault();
+  zone.classList.remove('drag');
+  handleFiles(e.dataTransfer.files);
+});
+
+// ─── Init ────────────────────────────────────────────────────────
+async function init() {
+  await openDB();
+  await loadSettings();
+  await loadPlan();
+  await updateStats();
+  await updateStorage();
+
+  // Register SW
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+}
+
+init();
+</script>
+</body>
+</html>
