@@ -3,1508 +3,1362 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0c0c10">
+<meta name="theme-color" content="#0a0a0e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PaceLab">
 <link rel="manifest" href="manifest.json">
 <title>PaceLab</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne+Mono&family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0c0c10;
-  --bg2: #111116;
-  --surface: #18181f;
-  --border: #252530;
-  --border2: #1e1e28;
-  --text: #e8e8f0;
-  --muted: #52526a;
-  --accent: #ff4d2e;
-  --accent2: #ff8c42;
-  --blue: #4a9eff;
-  --green: #2dce7a;
-  --purple: #a78bfa;
-  --red: #ff4d2e;
-  --font-mono: 'DM Mono', monospace;
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'Manrope', sans-serif;
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --bg:      #0a0a0e;
+  --bg2:     #0f0f14;
+  --surface: #14141c;
+  --surface2:#1a1a24;
+  --border:  #22222e;
+  --text:    #eeeef8;
+  --muted:   #4a4a62;
+  --accent:  #ff3d1f;
+  --orange:  #ff8c3a;
+  --green:   #22d67a;
+  --blue:    #3d8eff;
+  --purple:  #9b6dff;
+  --yellow:  #f5c842;
+  --mono: 'Syne Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
+  --safe-t: env(safe-area-inset-top,0px);
+  --safe-b: env(safe-area-inset-bottom,0px);
 }
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  display: flex;
-  flex-direction: column;
-  overscroll-behavior: none;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{color:var(--text);font-family:var(--body);display:flex;flex-direction:column;overscroll-behavior:none}
 
-/* LAYOUT */
-.app-shell {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
-}
+/* ── SHELL ── */
+.shell{display:flex;flex-direction:column;height:100%;padding-top:var(--safe-t);padding-bottom:var(--safe-b)}
 
-/* TOP BAR */
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.25rem 0.75rem;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.topbar-logo {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  letter-spacing: 2px;
-  color: var(--text);
-  line-height: 1;
-}
-.topbar-logo span { color: var(--accent); }
-.topbar-pace {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--muted);
-  text-align: right;
-}
-.topbar-pace strong { color: var(--green); font-size: 0.85rem; display: block; }
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.25rem .7rem;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg)}
+.logo{font-family:var(--display);font-weight:800;font-size:1.4rem;letter-spacing:-1px}
+.logo span{color:var(--accent)}
+.top-pace{font-family:var(--mono);font-size:.6rem;text-align:right;color:var(--muted)}
+.top-pace strong{display:block;color:var(--green);font-size:.9rem}
 
-/* TABS */
-.tabs {
-  display: flex;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  background: var(--bg2);
-}
-.tab {
-  flex: 1;
-  padding: 0.75rem 0.5rem;
-  text-align: center;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s;
-  font-family: var(--font-mono);
-}
-.tab.active { color: var(--text); border-bottom-color: var(--accent); }
-.tab-icon { font-size: 1rem; display: block; margin-bottom: 0.15rem; }
+/* ── TABS ── */
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0}
+.tab{flex:1;padding:.6rem .25rem;text-align:center;font-family:var(--mono);font-size:.52rem;letter-spacing:.5px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;user-select:none}
+.tab .ti{font-size:.9rem;display:block;margin-bottom:.1rem}
+.tab.active{color:var(--text);border-bottom-color:var(--accent)}
 
-/* PAGES */
-.pages { flex: 1; overflow: hidden; position: relative; }
-.page {
-  position: absolute; inset: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 1rem 1.25rem 2rem;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.page.active { display: block; opacity: 1; }
+/* ── PAGES ── */
+.pages{flex:1;overflow:hidden;position:relative}
+.page{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem 1.1rem 3rem;display:none}
+.page.active{display:block}
 
-/* SECTION TITLES */
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+/* ── SECTION LABEL ── */
+.slabel{font-family:var(--mono);font-size:.55rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* UPLOAD ZONE */
-.upload-zone {
-  border: 1.5px dashed var(--border2);
-  border-radius: 12px;
-  padding: 2rem 1rem;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: var(--surface);
-  margin-bottom: 1.5rem;
-  position: relative;
-}
-.upload-zone.drag { border-color: var(--accent); background: rgba(255,77,46,0.05); }
-.upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.upload-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-.upload-zone h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.35rem; }
-.upload-zone p { font-size: 0.7rem; color: var(--muted); font-family: var(--font-mono); }
-.upload-formats {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin-top: 0.75rem;
-}
-.fmt-badge {
-  font-family: var(--font-mono);
-  font-size: 0.58rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 3px;
-  border: 1px solid var(--border);
-  color: var(--muted);
-  letter-spacing: 1px;
-}
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:1rem}
+.card-header{padding:.9rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-header h3{font-size:.85rem;font-weight:700}
 
-/* PROCESSING */
-.processing-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  display: none;
-}
-.processing-card.active { display: block; }
-.spinner {
-  width: 36px; height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 1rem;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.processing-card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.25rem; }
-.processing-card p { font-size: 0.68rem; color: var(--muted); font-family: var(--font-mono); }
+/* ── UPLOAD ZONE ── */
+.upload-zone{border:1.5px dashed var(--border);border-radius:12px;padding:2rem 1rem;text-align:center;background:var(--surface);margin-bottom:1rem;transition:border-color .2s,background .2s;cursor:pointer;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(255,61,31,.04)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone h3{font-size:.9rem;font-weight:700;margin:.5rem 0 .25rem}
+.upload-zone p{font-size:.68rem;color:var(--muted);font-family:var(--mono)}
+.fmt-row{display:flex;gap:.5rem;justify-content:center;margin-top:.6rem}
+.fmt{font-family:var(--mono);font-size:.55rem;padding:.2rem .5rem;border:1px solid var(--border);border-radius:3px;color:var(--muted);letter-spacing:1px}
 
-/* RESULT CARD */
-.result-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-  display: none;
-  animation: slideUp 0.3s ease;
-}
-@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-.result-card.active { display: block; }
-.result-header {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.result-header h3 { font-size: 0.85rem; font-weight: 700; }
-.result-header .result-date { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); }
-.result-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-bottom: 1px solid var(--border);
-}
-.result-stat {
-  padding: 0.9rem 0.75rem;
-  text-align: center;
-  border-right: 1px solid var(--border);
-}
-.result-stat:last-child { border-right: none; }
-.result-stat .rs-val {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  line-height: 1;
-  color: var(--text);
-}
-.result-stat .rs-label {
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  color: var(--muted);
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-top: 0.2rem;
-}
-.result-insight {
-  padding: 1rem 1.25rem;
-  font-size: 0.72rem;
-  line-height: 1.6;
-  color: var(--text);
-  background: rgba(255,77,46,0.04);
-  border-left: 3px solid var(--accent);
-  margin: 0.75rem;
-  border-radius: 0 6px 6px 0;
-}
-.result-insight strong { color: var(--accent); }
+/* Upload type tabs */
+.upload-type-tabs{display:flex;gap:.5rem;margin-bottom:.9rem}
+.utt{flex:1;padding:.6rem;text-align:center;border-radius:8px;border:1px solid var(--border);font-size:.7rem;font-weight:700;cursor:pointer;transition:all .2s;font-family:var(--mono)}
+.utt.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.utt:not(.active){color:var(--muted)}
 
-/* ADJUSTMENT CARD */
-.adjustment-card {
-  background: linear-gradient(135deg, rgba(45,206,122,0.08), rgba(74,158,255,0.05));
-  border: 1px solid rgba(45,206,122,0.2);
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  display: none;
-  animation: slideUp 0.4s ease 0.1s both;
-}
-.adjustment-card.active { display: block; }
-.adj-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-.adj-header h3 { font-size: 0.85rem; font-weight: 700; color: var(--green); }
-.adj-header .adj-icon { font-size: 1.1rem; }
-.adj-changes { display: flex; flex-direction: column; gap: 0.5rem; }
-.adj-change {
-  background: var(--surface);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  font-size: 0.72rem;
-  line-height: 1.5;
-}
-.adj-change .ch-day {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 500;
-  color: var(--accent2);
-  flex-shrink: 0;
-  min-width: 70px;
-  padding-top: 0.1rem;
-}
-.adj-change .ch-text { color: var(--text); }
-.adj-change .ch-text em { color: var(--green); font-style: normal; font-weight: 700; }
+/* ── SPINNER ── */
+.spinner-wrap{text-align:center;padding:2rem 1rem;display:none}
+.spinner-wrap.active{display:block}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto .75rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner-wrap h3{font-size:.8rem;font-weight:700;margin-bottom:.2rem}
+.spinner-wrap p{font-family:var(--mono);font-size:.65rem;color:var(--muted)}
 
-/* HISTORY */
-.history-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.history-item:hover { border-color: var(--muted); }
-.history-icon { font-size: 1.5rem; flex-shrink: 0; }
-.history-info { flex: 1; min-width: 0; }
-.history-title { font-size: 0.8rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.history-meta { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; }
-.history-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; flex-shrink: 0; }
-.history-pace { font-family: var(--font-display); font-size: 1.3rem; color: var(--accent); line-height: 1; }
-.history-dist { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); }
-.delete-btn {
-  background: none;
-  border: none;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 0.25rem;
-  font-size: 1rem;
-  flex-shrink: 0;
-  transition: color 0.2s;
-}
-.delete-btn:hover { color: var(--accent); }
+/* ── RESULT CARD ── */
+.result-card{display:none;animation:fadeUp .3s ease}
+.result-card.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.result-stats{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border)}
+.rs{padding:.8rem .6rem;text-align:center;border-right:1px solid var(--border)}
+.rs:last-child{border-right:none}
+.rs-v{font-family:var(--display);font-size:1.5rem;font-weight:800;line-height:1}
+.rs-l{font-family:var(--mono);font-size:.5rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:.2rem}
+.insight{padding:.9rem 1.1rem;font-size:.72rem;line-height:1.6;border-left:3px solid var(--accent);background:rgba(255,61,31,.05);margin:.75rem;border-radius:0 6px 6px 0}
+.insight strong{color:var(--accent)}
 
-.empty-state {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: var(--muted);
-}
-.empty-state .es-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.4; }
-.empty-state p { font-size: 0.75rem; font-family: var(--font-mono); line-height: 1.6; }
+/* ── SPRINT SECTION ── */
+.sprint-header{padding:.9rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.sprint-count{font-family:var(--mono);font-size:.6rem;color:var(--muted)}
+.sprint-row{padding:.75rem 1.1rem;border-bottom:1px solid var(--border);display:grid;grid-template-columns:28px 1fr auto;gap:.75rem;align-items:center;transition:background .15s}
+.sprint-row:last-child{border-bottom:none}
+.sprint-row:hover{background:rgba(255,255,255,.02)}
+.sprint-n{font-family:var(--mono);font-size:.65rem;color:var(--muted);font-weight:700}
+.sprint-info{display:flex;flex-direction:column;gap:.2rem}
+.sprint-dist{font-size:.75rem;font-weight:700}
+.sprint-meta{font-family:var(--mono);font-size:.58rem;color:var(--muted)}
+.sprint-vals{text-align:right;display:flex;flex-direction:column;gap:.2rem}
+.sprint-pace{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--accent);line-height:1}
+.sprint-time{font-family:var(--mono);font-size:.58rem;color:var(--orange)}
+.sprint-hr{font-family:var(--mono);font-size:.58rem;color:var(--muted)}
+.no-sprints{padding:1.5rem;text-align:center;font-family:var(--mono);font-size:.65rem;color:var(--muted);line-height:1.6}
 
-/* PLAN PAGE */
-.plan-summary {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-.plan-header {
-  padding: 1rem 1.25rem;
-  background: linear-gradient(135deg, rgba(255,77,46,0.12), transparent);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.plan-header h2 { font-family: var(--font-display); font-size: 1.4rem; letter-spacing: 1px; }
-.plan-version { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); }
-.plan-days { }
-.plan-day {
-  padding: 0.9rem 1.25rem;
-  border-bottom: 1px solid var(--border2);
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  transition: background 0.15s;
-}
-.plan-day:last-child { border-bottom: none; }
-.plan-day:hover { background: rgba(255,255,255,0.02); }
-.pd-day {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 500;
-  color: var(--muted);
-  min-width: 60px;
-  padding-top: 0.15rem;
-  flex-shrink: 0;
-}
-.pd-info { flex: 1; }
-.pd-title { font-size: 0.8rem; font-weight: 700; margin-bottom: 0.2rem; }
-.pd-desc { font-size: 0.65rem; color: var(--muted); line-height: 1.5; }
-.pd-badge {
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  padding: 0.2rem 0.45rem;
-  border-radius: 3px;
-  flex-shrink: 0;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  align-self: flex-start;
-  margin-top: 0.1rem;
-}
-.badge-easy { background: rgba(45,206,122,0.15); color: var(--green); }
-.badge-tempo { background: rgba(255,140,66,0.15); color: var(--accent2); }
-.badge-interval { background: rgba(255,77,46,0.15); color: var(--accent); }
-.badge-long { background: rgba(74,158,255,0.15); color: var(--blue); }
-.badge-rest { background: rgba(82,82,106,0.2); color: var(--muted); }
-.badge-updated { background: rgba(167,139,250,0.15); color: var(--purple); }
+/* ── ADJ CARD ── */
+.adj-card{background:rgba(34,214,122,.06);border:1px solid rgba(34,214,122,.2);border-radius:12px;padding:1.1rem;margin-bottom:1rem;display:none;animation:fadeUp .3s ease .1s both}
+.adj-card.active{display:block}
+.adj-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem}
+.adj-head h3{font-size:.82rem;font-weight:700;color:var(--green)}
+.adj-change{background:var(--surface);border-radius:8px;padding:.65rem .9rem;margin-bottom:.4rem;display:flex;gap:.75rem;font-size:.7rem;line-height:1.5}
+.adj-day{font-family:var(--mono);font-size:.58rem;color:var(--orange);flex-shrink:0;min-width:68px;padding-top:.1rem}
+.adj-text em{color:var(--green);font-style:normal;font-weight:700}
 
-/* STATS PAGE */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-}
-.stat-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem;
-}
-.stat-box .sb-val {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  line-height: 1;
-  color: var(--text);
-}
-.stat-box .sb-label {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  color: var(--muted);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-top: 0.3rem;
-}
-.stat-box.accent .sb-val { color: var(--accent); }
-.stat-box.green .sb-val { color: var(--green); }
-.stat-box.blue .sb-val { color: var(--blue); }
+/* ── PLAN ── */
+.plan-top{padding:.9rem 1.1rem;background:linear-gradient(135deg,rgba(255,61,31,.1),transparent);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.plan-top h2{font-family:var(--display);font-size:1.3rem;font-weight:800;letter-spacing:-1px}
+.plan-ver{font-family:var(--mono);font-size:.55rem;color:var(--muted)}
+.plan-day{padding:.85rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.9rem;transition:background .15s}
+.plan-day:last-child{border-bottom:none}
+.plan-day:hover{background:rgba(255,255,255,.02)}
+.pd-name{font-family:var(--mono);font-size:.58rem;color:var(--muted);min-width:58px;flex-shrink:0;padding-top:.15rem}
+.pd-body{flex:1}
+.pd-title{font-size:.8rem;font-weight:700;margin-bottom:.2rem}
+.pd-desc{font-size:.63rem;color:var(--muted);line-height:1.5}
+.pd-badge{font-family:var(--mono);font-size:.5rem;padding:.18rem .4rem;border-radius:3px;flex-shrink:0;font-weight:500;letter-spacing:.5px;align-self:flex-start;margin-top:.1rem}
+.b-easy{background:rgba(34,214,122,.12);color:var(--green)}
+.b-tempo{background:rgba(255,140,58,.12);color:var(--orange)}
+.b-interval{background:rgba(255,61,31,.12);color:var(--accent)}
+.b-long{background:rgba(61,142,255,.12);color:var(--blue)}
+.b-rest{background:rgba(74,74,98,.15);color:var(--muted)}
+.b-upd{background:rgba(155,109,255,.15);color:var(--purple)}
 
-/* TREND CHART */
-.trend-chart {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
-}
-.trend-chart h3 { font-size: 0.7rem; font-family: var(--font-mono); color: var(--muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1rem; }
-.chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 80px; }
-.chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
-.chart-bar {
-  width: 100%;
-  border-radius: 3px 3px 0 0;
-  background: var(--border);
-  transition: background 0.3s, height 0.5s ease;
-  min-height: 4px;
-}
-.chart-bar.current { background: var(--accent); }
-.chart-bar-label { font-family: var(--font-mono); font-size: 0.5rem; color: var(--muted); text-align: center; }
+/* ── HISTORY ── */
+.hist-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.9rem;cursor:pointer;transition:border-color .2s}
+.hist-item:hover{border-color:var(--muted)}
+.hist-icon{font-size:1.4rem;flex-shrink:0}
+.hist-info{flex:1;min-width:0}
+.hist-title{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist-meta{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.15rem}
+.hist-tag{font-family:var(--mono);font-size:.5rem;padding:.15rem .35rem;border-radius:3px;margin-right:.3rem;display:inline-block}
+.tag-new{background:rgba(34,214,122,.15);color:var(--green)}
+.tag-base{background:rgba(61,142,255,.15);color:var(--blue)}
+.hist-right{display:flex;flex-direction:column;align-items:flex-end;gap:.2rem;flex-shrink:0}
+.hist-pace{font-family:var(--display);font-size:1.2rem;font-weight:800;color:var(--accent);line-height:1}
+.hist-dist{font-family:var(--mono);font-size:.55rem;color:var(--muted)}
+.del-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:.2rem;font-size:.9rem;flex-shrink:0;transition:color .2s}
+.del-btn:hover{color:var(--accent)}
+.empty-state{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty-state .ei{font-size:2.5rem;opacity:.3;margin-bottom:.75rem}
+.empty-state p{font-family:var(--mono);font-size:.65rem;line-height:1.7}
 
-/* SETTINGS PAGE */
-.settings-section { margin-bottom: 1.5rem; }
-.settings-row {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  cursor: pointer;
-  transition: border-color 0.2s;
-}
-.settings-row:hover { border-color: var(--muted); }
-.settings-row .sr-label { font-size: 0.8rem; font-weight: 600; }
-.settings-row .sr-sub { font-size: 0.62rem; color: var(--muted); margin-top: 0.15rem; font-family: var(--font-mono); }
-.settings-row .sr-value { font-family: var(--font-mono); font-size: 0.7rem; color: var(--accent); }
-.settings-row .sr-arrow { color: var(--muted); font-size: 0.8rem; }
+/* ── WORKOUT DETAIL MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;padding:1rem;overflow-y:auto}
+.modal-overlay.active{display:flex;align-items:flex-start;justify-content:center}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;width:100%;max-width:500px;margin:auto;overflow:hidden;animation:fadeUp .25s ease}
+.modal-top{padding:1rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-top h2{font-family:var(--display);font-size:1.1rem;font-weight:800}
+.modal-close{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:.2rem .5rem;transition:color .2s}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:1rem 1.1rem}
 
-.danger-btn {
-  width: 100%;
-  background: rgba(255,77,46,0.1);
-  border: 1px solid rgba(255,77,46,0.3);
-  border-radius: 10px;
-  padding: 1rem 1.25rem;
-  color: var(--accent);
-  font-family: var(--font-body);
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-.danger-btn:hover { background: rgba(255,77,46,0.2); }
+/* Split rows in modal */
+.split-row{display:grid;grid-template-columns:40px 1fr 65px 65px 55px;align-items:center;gap:.5rem;padding:.6rem 0;border-bottom:1px solid var(--border);font-family:var(--mono);font-size:.65rem}
+.split-row:last-child{border-bottom:none}
+.split-km{color:var(--muted);font-size:.6rem}
+.split-bar-wrap{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.split-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.split-pace{text-align:right;color:var(--text);font-weight:700}
+.split-time{text-align:right;color:var(--orange)}
+.split-hr{text-align:right;color:var(--muted)}
 
-/* STORAGE BAR */
-.storage-bar-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.5rem;
-}
-.storage-bar-wrap .sb-label { font-size: 0.7rem; font-weight: 600; margin-bottom: 0.25rem; display: flex; justify-content: space-between; }
-.storage-bar-wrap .sb-sub { font-family: var(--font-mono); font-size: 0.58rem; color: var(--muted); margin-bottom: 0.75rem; }
-.storage-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.storage-fill { height: 100%; border-radius: 3px; background: var(--green); transition: width 0.5s, background 0.3s; }
-.storage-fill.warn { background: var(--accent2); }
-.storage-fill.danger { background: var(--accent); }
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:1rem}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem}
+.sb-v{font-family:var(--display);font-size:1.9rem;font-weight:800;line-height:1}
+.sb-l{font-family:var(--mono);font-size:.52rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:.25rem}
+.sb-accent .sb-v{color:var(--accent)}
+.sb-green .sb-v{color:var(--green)}
+.sb-blue .sb-v{color:var(--blue)}
+.sb-orange .sb-v{color:var(--orange)}
 
-/* TOAST */
-.toast {
-  position: fixed;
-  bottom: calc(80px + var(--safe-bottom));
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--text);
-  color: var(--bg);
-  padding: 0.6rem 1.25rem;
-  border-radius: 20px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s;
-  z-index: 100;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.profile-card{background:linear-gradient(135deg,rgba(255,61,31,.08),rgba(61,142,255,.04));border:1px solid var(--border);border-radius:12px;padding:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.9rem}
+.profile-avatar{width:46px;height:46px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:1.3rem;font-weight:800;color:#fff;flex-shrink:0}
+.pi-name{font-size:.9rem;font-weight:700}
+.pi-meta{font-family:var(--mono);font-size:.58rem;color:var(--muted);margin-top:.15rem}
+.pi-vo2{font-family:var(--mono);font-size:.62rem;color:var(--green);margin-top:.12rem}
 
-/* PROFILE CARD */
-.profile-card {
-  background: linear-gradient(135deg, rgba(255,77,46,0.1), rgba(74,158,255,0.05));
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-.profile-avatar {
-  width: 50px; height: 50px;
-  background: var(--accent);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: white;
-  flex-shrink: 0;
-}
-.profile-info .pi-name { font-size: 0.9rem; font-weight: 800; }
-.profile-info .pi-meta { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.2rem; }
-.profile-info .pi-vo2 { font-family: var(--font-mono); font-size: 0.65rem; color: var(--green); margin-top: 0.15rem; }
+.trend-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.1rem;margin-bottom:1rem}
+.trend-card h3{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:.75rem}
+.bars{display:flex;align-items:flex-end;gap:3px;height:70px}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.bar{width:100%;border-radius:3px 3px 0 0;background:var(--border);transition:height .5s ease;min-height:3px}
+.bar.cur{background:var(--accent)}
+.bar-lbl{font-family:var(--mono);font-size:.45rem;color:var(--muted);text-align:center}
+
+/* ── HR ZONES ── */
+.hr-zones{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem;margin-bottom:1rem}
+.hz{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.75rem}
+.hz-name{font-family:var(--mono);font-size:.55rem;color:var(--muted);letter-spacing:1px;margin-bottom:.3rem}
+.hz-range{font-size:.78rem;font-weight:700}
+.hz-desc{font-family:var(--mono);font-size:.55rem;color:var(--muted);margin-top:.2rem;line-height:1.4}
+
+/* ── SETTINGS ── */
+.settings-section{margin-bottom:1.25rem}
+.sr{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem;cursor:pointer;transition:border-color .2s}
+.sr:hover{border-color:var(--muted)}
+.sr-label{font-size:.8rem;font-weight:600}
+.sr-sub{font-family:var(--mono);font-size:.6rem;color:var(--muted);margin-top:.12rem}
+.sr-arr{color:var(--muted)}
+.danger-btn{width:100%;background:rgba(255,61,31,.08);border:1px solid rgba(255,61,31,.25);border-radius:10px;padding:.9rem;color:var(--accent);font-family:var(--body);font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.5rem}
+.danger-btn:hover{background:rgba(255,61,31,.18)}
+
+.storage-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.9rem 1.1rem;margin-bottom:1rem}
+.storage-top{display:flex;justify-content:space-between;font-size:.72rem;font-weight:600;margin-bottom:.15rem}
+.storage-sub{font-family:var(--mono);font-size:.56rem;color:var(--muted);margin-bottom:.6rem}
+.storage-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.storage-fill{height:100%;border-radius:3px;background:var(--green);transition:width .5s,background .3s}
+.storage-fill.warn{background:var(--orange)}
+.storage-fill.danger{background:var(--accent)}
+
+/* ── SECURITY BADGE ── */
+.sec-badge{background:rgba(34,214,122,.06);border:1px solid rgba(34,214,122,.2);border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;font-size:.68rem;line-height:1.6;display:flex;gap:.75rem}
+.sec-badge .si{flex-shrink:0;font-size:1.1rem}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:calc(70px + var(--safe-b));left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);color:var(--bg);padding:.5rem 1.2rem;border-radius:20px;font-size:.72rem;font-weight:700;white-space:nowrap;opacity:0;pointer-events:none;transition:all .25s;z-index:300}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── ONBOARDING ── */
+.onboard-overlay{position:fixed;inset:0;background:var(--bg);z-index:400;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.onboard-overlay.hidden{display:none}
+.onboard-box{width:100%;max-width:420px}
+.ob-logo{font-family:var(--display);font-size:2.5rem;font-weight:800;letter-spacing:-2px;margin-bottom:.25rem}
+.ob-logo span{color:var(--accent)}
+.ob-sub{font-family:var(--mono);font-size:.6rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:2rem}
+.ob-field{margin-bottom:1rem}
+.ob-field label{font-family:var(--mono);font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.4rem}
+.ob-field input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-family:var(--body);font-size:.9rem;outline:none;transition:border-color .2s}
+.ob-field input:focus{border-color:var(--accent)}
+.ob-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.ob-btn{width:100%;background:var(--accent);border:none;border-radius:10px;padding:.9rem;color:#fff;font-family:var(--display);font-size:1rem;font-weight:800;letter-spacing:1px;cursor:pointer;margin-top:1rem;transition:background .2s}
+.ob-btn:hover{background:#e02e10}
+.ob-note{font-family:var(--mono);font-size:.55rem;color:var(--muted);text-align:center;margin-top:.75rem;line-height:1.6}
 </style>
 </head>
 <body>
-<div class="app-shell">
 
-  <!-- TOP BAR -->
+<!-- ONBOARDING -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-box">
+    <div class="ob-logo">Pace<span>Lab</span></div>
+    <div class="ob-sub">// Configuração inicial</div>
+    <div class="ob-field">
+      <label>Seu nome</label>
+      <input type="text" id="obName" placeholder="Pedro" maxlength="30">
+    </div>
+    <div class="ob-row">
+      <div class="ob-field">
+        <label>Idade</label>
+        <input type="number" id="obAge" placeholder="23" min="10" max="90">
+      </div>
+      <div class="ob-field">
+        <label>Peso (kg)</label>
+        <input type="number" id="obWeight" placeholder="70" min="30" max="200">
+      </div>
+    </div>
+    <div class="ob-row">
+      <div class="ob-field">
+        <label>Altura (cm)</label>
+        <input type="number" id="obHeight" placeholder="180" min="100" max="230">
+      </div>
+      <div class="ob-field">
+        <label>Pace alvo (ex: 4:14)</label>
+        <input type="text" id="obPace" placeholder="4:14" pattern="\d:\d{2}">
+      </div>
+    </div>
+    <div class="ob-field">
+      <label>Dias de treino por semana</label>
+      <input type="number" id="obDays" placeholder="5" min="2" max="7">
+    </div>
+    <button class="ob-btn" onclick="completeOnboarding()">COMEÇAR →</button>
+    <div class="ob-note">🔒 Todos os dados ficam apenas no seu dispositivo.<br>Nada é enviado para servidores externos.</div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="shell" id="appShell" style="display:none">
   <div class="topbar">
-    <div class="topbar-logo">Pace<span>Lab</span></div>
-    <div class="topbar-pace" id="topbarPace">
-      <strong id="topbarPaceVal">—:——</strong>
-      pace atual
+    <div class="logo">Pace<span>Lab</span></div>
+    <div class="top-pace">
+      <strong id="topPace">—:——</strong>
+      pace alvo
     </div>
   </div>
 
-  <!-- TABS -->
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('upload')">
-      <span class="tab-icon">⬆</span>Upload
-    </div>
-    <div class="tab" onclick="switchTab('plan')">
-      <span class="tab-icon">📋</span>Plano
-    </div>
-    <div class="tab" onclick="switchTab('history')">
-      <span class="tab-icon">📂</span>Histórico
-    </div>
-    <div class="tab" onclick="switchTab('stats')">
-      <span class="tab-icon">📊</span>Stats
-    </div>
-    <div class="tab" onclick="switchTab('settings')">
-      <span class="tab-icon">⚙</span>Config
-    </div>
+    <div class="tab active" onclick="switchTab('upload')"><span class="ti">⬆</span>Upload</div>
+    <div class="tab" onclick="switchTab('plan')"><span class="ti">📋</span>Plano</div>
+    <div class="tab" onclick="switchTab('history')"><span class="ti">📂</span>Histórico</div>
+    <div class="tab" onclick="switchTab('stats')"><span class="ti">📊</span>Stats</div>
+    <div class="tab" onclick="switchTab('settings')"><span class="ti">⚙</span>Config</div>
   </div>
 
-  <!-- PAGES -->
   <div class="pages">
 
-    <!-- UPLOAD PAGE -->
+    <!-- UPLOAD -->
     <div class="page active" id="page-upload">
-      <div class="section-label">Novo treino</div>
+      <div class="slabel">Tipo de upload</div>
+      <div class="upload-type-tabs">
+        <div class="utt active" id="utt-new" onclick="setUploadType('new')">🏃 Treino novo</div>
+        <div class="utt" id="utt-base" onclick="setUploadType('base')">📦 Dados históricos</div>
+      </div>
 
-      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-        <input type="file" id="fileInput" accept=".gpx,.fit" multiple onchange="handleFiles(this.files)">
-        <div class="upload-icon">🏃</div>
-        <h3>Soltar arquivo aqui</h3>
-        <p>Toque para selecionar ou arraste</p>
-        <div class="upload-formats">
-          <span class="fmt-badge">GPX</span>
-          <span class="fmt-badge">FIT</span>
+      <div id="uploadTypeDesc" style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:.9rem;line-height:1.6">
+        Envie o arquivo do treino que você acabou de fazer. O app vai analisar e ajustar seu plano.
+      </div>
+
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept=".gpx,.fit">
+        <div style="font-size:2rem;margin-bottom:.5rem">🏃</div>
+        <h3 id="uploadZoneTitle">Soltar arquivo aqui</h3>
+        <p>Toque para selecionar · GPX ou FIT</p>
+        <div class="fmt-row">
+          <span class="fmt">GPX</span>
+          <span class="fmt">FIT</span>
         </div>
       </div>
 
-      <div class="processing-card" id="processingCard">
+      <div class="spinner-wrap" id="spinnerWrap">
         <div class="spinner"></div>
-        <h3 id="processingTitle">Analisando treino...</h3>
-        <p id="processingMsg">Lendo dados GPS e cardíacos</p>
+        <h3 id="spinTitle">Analisando...</h3>
+        <p id="spinMsg">Lendo arquivo</p>
       </div>
 
-      <div class="result-card" id="resultCard">
-        <div class="result-header">
-          <h3 id="resultName">Evening Run</h3>
-          <span class="result-date" id="resultDate">—</span>
+      <div class="result-card card" id="resultCard">
+        <div class="card-header">
+          <h3 id="resultName">—</h3>
+          <span style="font-family:var(--mono);font-size:.58rem;color:var(--muted)" id="resultDate">—</span>
         </div>
         <div class="result-stats">
-          <div class="result-stat">
-            <div class="rs-val" id="rsDist">—</div>
-            <div class="rs-label">km</div>
-          </div>
-          <div class="result-stat">
-            <div class="rs-val" id="rsPace">—:——</div>
-            <div class="rs-label">pace</div>
-          </div>
-          <div class="result-stat">
-            <div class="rs-val" id="rsHR">—</div>
-            <div class="rs-label">bpm avg</div>
-          </div>
+          <div class="rs"><div class="rs-v" id="rsDist">—</div><div class="rs-l">km</div></div>
+          <div class="rs"><div class="rs-v" id="rsPace" style="color:var(--accent)">—:——</div><div class="rs-l">pace</div></div>
+          <div class="rs"><div class="rs-v" id="rsHR">—</div><div class="rs-l">bpm avg</div></div>
         </div>
-        <div class="result-insight" id="resultInsight"></div>
+        <div class="insight" id="resultInsight"></div>
       </div>
 
-      <div class="adjustment-card" id="adjustmentCard">
-        <div class="adj-header">
-          <span class="adj-icon">🔄</span>
-          <h3>Plano ajustado automaticamente</h3>
+      <!-- SPRINT DETECTOR -->
+      <div class="card" id="sprintCard" style="display:none">
+        <div class="sprint-header">
+          <h3 style="font-size:.82rem;font-weight:700">⚡ Tiros detectados</h3>
+          <span class="sprint-count" id="sprintCount">—</span>
         </div>
-        <div class="adj-changes" id="adjChanges"></div>
+        <div id="sprintList"></div>
+      </div>
+
+      <div class="adj-card" id="adjCard">
+        <div class="adj-head"><span>🔄</span><h3>Plano ajustado</h3></div>
+        <div id="adjList"></div>
       </div>
     </div>
 
-    <!-- PLAN PAGE -->
+    <!-- PLAN -->
     <div class="page" id="page-plan">
-      <div class="section-label">Plano da semana</div>
-      <div class="plan-summary" id="planSummary">
-        <div class="plan-header">
+      <div class="slabel">Plano semanal</div>
+      <div class="card">
+        <div class="plan-top">
           <h2 id="planTitle">PLANO 4:14</h2>
-          <span class="plan-version" id="planVersion">v1 · gerado agora</span>
+          <span class="plan-ver" id="planVer">v1</span>
         </div>
-        <div class="plan-days" id="planDays"></div>
+        <div id="planDays"></div>
       </div>
     </div>
 
-    <!-- HISTORY PAGE -->
+    <!-- HISTORY -->
     <div class="page" id="page-history">
-      <div class="section-label">Treinos salvos</div>
-      <div id="historyList"></div>
+      <div class="slabel">Treinos salvos</div>
+      <div id="histList"></div>
     </div>
 
-    <!-- STATS PAGE -->
+    <!-- STATS -->
     <div class="page" id="page-stats">
-      <div class="section-label">Visão geral</div>
-
+      <div class="slabel">Perfil</div>
       <div class="profile-card">
         <div class="profile-avatar" id="profileInitial">P</div>
-        <div class="profile-info">
-          <div class="pi-name" id="profileName">Corredor</div>
-          <div class="pi-meta" id="profileMeta">23 anos · 5 dias/semana</div>
-          <div class="pi-vo2" id="profileVo2">VO2max estimado: —</div>
+        <div>
+          <div class="pi-name" id="profileName">—</div>
+          <div class="pi-meta" id="profileMeta">—</div>
+          <div class="pi-vo2" id="profileVo2">VO2max: —</div>
         </div>
       </div>
 
+      <div class="slabel">Números</div>
       <div class="stats-grid">
-        <div class="stat-box accent">
-          <div class="sb-val" id="statAvgPace">—:——</div>
-          <div class="sb-label">Pace médio</div>
-        </div>
-        <div class="stat-box">
-          <div class="sb-val" id="statRuns">0</div>
-          <div class="sb-label">Treinos</div>
-        </div>
-        <div class="stat-box green">
-          <div class="sb-val" id="statKm">0</div>
-          <div class="sb-label">km total</div>
-        </div>
-        <div class="stat-box blue">
-          <div class="sb-val" id="statAvgHR">—</div>
-          <div class="sb-label">HR médio</div>
-        </div>
+        <div class="stat-box sb-accent"><div class="sb-v" id="sAvgPace">—:——</div><div class="sb-l">Pace médio</div></div>
+        <div class="stat-box"><div class="sb-v" id="sRuns">0</div><div class="sb-l">Treinos</div></div>
+        <div class="stat-box sb-green"><div class="sb-v" id="sKm">0</div><div class="sb-l">km total</div></div>
+        <div class="stat-box sb-blue"><div class="sb-v" id="sHR">—</div><div class="sb-l">HR médio</div></div>
       </div>
 
-      <div class="section-label">Tendência de pace</div>
-      <div class="trend-chart">
-        <div class="chart-bars" id="trendBars"></div>
-      </div>
+      <div class="slabel">Zonas de FC (baseado no seu HRmax)</div>
+      <div class="hr-zones" id="hrZones"></div>
+
+      <div class="slabel">Tendência de pace</div>
+      <div class="trend-card"><div class="bars" id="trendBars"></div></div>
     </div>
 
-    <!-- SETTINGS PAGE -->
+    <!-- SETTINGS -->
     <div class="page" id="page-settings">
-      <div class="section-label">Perfil</div>
+      <div class="sec-badge">
+        <span class="si">🔒</span>
+        <div>
+          <strong style="font-size:.72rem;font-weight:700;display:block;margin-bottom:.2rem">100% local · zero servidores</strong>
+          Todos os seus dados ficam somente neste dispositivo via IndexedDB. Nenhuma informação é transmitida externamente. Não há login, cookies de rastreamento ou analytics.
+        </div>
+      </div>
 
+      <div class="slabel">Perfil</div>
       <div class="settings-section">
-        <div class="settings-row" onclick="editSetting('name')">
-          <div>
-            <div class="sr-label">Nome</div>
-            <div class="sr-sub" id="settingName">Pedro</div>
-          </div>
-          <span class="sr-arrow">›</span>
-        </div>
-        <div class="settings-row" onclick="editSetting('age')">
-          <div>
-            <div class="sr-label">Idade</div>
-            <div class="sr-sub" id="settingAge">23 anos</div>
-          </div>
-          <span class="sr-arrow">›</span>
-        </div>
-        <div class="settings-row" onclick="editSetting('targetPace')">
-          <div>
-            <div class="sr-label">Pace alvo</div>
-            <div class="sr-sub" id="settingTargetPace">4:14 min/km</div>
-          </div>
-          <span class="sr-value">›</span>
-        </div>
-        <div class="settings-row" onclick="editSetting('days')">
-          <div>
-            <div class="sr-label">Dias de treino / semana</div>
-            <div class="sr-sub" id="settingDays">5 dias</div>
-          </div>
-          <span class="sr-arrow">›</span>
-        </div>
-        <div class="settings-row" onclick="editSetting('hrmax')">
-          <div>
-            <div class="sr-label">HR máximo</div>
-            <div class="sr-sub" id="settingHrmax">197 bpm (estimado)</div>
-          </div>
-          <span class="sr-arrow">›</span>
-        </div>
+        <div class="sr" onclick="editSetting('name')"><div><div class="sr-label">Nome</div><div class="sr-sub" id="sName">—</div></div><span class="sr-arr">›</span></div>
+        <div class="sr" onclick="editSetting('age')"><div><div class="sr-label">Idade</div><div class="sr-sub" id="sAge">—</div></div><span class="sr-arr">›</span></div>
+        <div class="sr" onclick="editSetting('weight')"><div><div class="sr-label">Peso</div><div class="sr-sub" id="sWeight">—</div></div><span class="sr-arr">›</span></div>
+        <div class="sr" onclick="editSetting('height')"><div><div class="sr-label">Altura</div><div class="sr-sub" id="sHeight">—</div></div><span class="sr-arr">›</span></div>
+        <div class="sr" onclick="editSetting('targetPace')"><div><div class="sr-label">Pace alvo</div><div class="sr-sub" id="sTargetPace">—</div></div><span class="sr-arr">›</span></div>
+        <div class="sr" onclick="editSetting('days')"><div><div class="sr-label">Dias / semana</div><div class="sr-sub" id="sDays">—</div></div><span class="sr-arr">›</span></div>
+        <div class="sr" onclick="editSetting('hrmax')"><div><div class="sr-label">HR máximo</div><div class="sr-sub" id="sHrmax">—</div></div><span class="sr-arr">›</span></div>
       </div>
 
-      <div class="section-label">Armazenamento</div>
-      <div class="storage-bar-wrap">
-        <div class="sb-label">
-          <span>Espaço usado</span>
-          <span id="storageText">calculando...</span>
-        </div>
-        <div class="sb-sub" id="storageFiles">0 treinos salvos</div>
-        <div class="storage-bar">
-          <div class="storage-fill" id="storageFill" style="width:0%"></div>
-        </div>
+      <div class="slabel">Armazenamento</div>
+      <div class="storage-wrap">
+        <div class="storage-top"><span>Espaço usado</span><span id="storageText">—</span></div>
+        <div class="storage-sub" id="storageFiles">0 treinos</div>
+        <div class="storage-bar"><div class="storage-fill" id="storageFill" style="width:0%"></div></div>
       </div>
 
-      <div class="settings-section">
-        <div class="settings-row" onclick="pruneOldWorkouts()">
-          <div>
-            <div class="sr-label">🧹 Limpar treinos antigos</div>
-            <div class="sr-sub">Remove treinos com mais de 90 dias</div>
-          </div>
-          <span class="sr-arrow">›</span>
-        </div>
-      </div>
-
-      <button class="danger-btn" onclick="confirmClearAll()">🗑 Apagar todos os dados</button>
+      <button class="danger-btn" onclick="pruneOld()">🧹 Remover treinos com +90 dias</button>
+      <button class="danger-btn" onclick="clearAll()">🗑 Apagar todos os dados</button>
     </div>
 
   </div><!-- /pages -->
-</div><!-- /app-shell -->
+</div><!-- /shell -->
+
+<!-- WORKOUT DETAIL MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalBox">
+    <div class="modal-top">
+      <h2 id="modalTitle">Treino</h2>
+      <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── IndexedDB ───────────────────────────────────────────────────
-const DB_NAME = 'pacelab', DB_VER = 1;
-let db;
+// ══════════════════════════════════════════════
+// SECURITY: All data stays in IndexedDB, no external calls,
+// no eval(), no innerHTML from external sources.
+// Input sanitisation applied to all user text.
+// ══════════════════════════════════════════════
 
+function sanitize(str) {
+  return String(str).replace(/[<>"'&]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','&':'&amp;'}[c]));
+}
+
+// ── IndexedDB ──────────────────────────────────
+const DB_NAME = 'pacelab2', DB_VER = 1;
+let db;
 function openDB() {
-  return new Promise((res, rej) => {
-    const req = indexedDB.open(DB_NAME, DB_VER);
-    req.onupgradeneeded = e => {
+  return new Promise((res,rej) => {
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = e => {
       const d = e.target.result;
       if (!d.objectStoreNames.contains('workouts')) {
-        const ws = d.createObjectStore('workouts', { keyPath: 'id' });
-        ws.createIndex('date', 'date');
+        const ws = d.createObjectStore('workouts', {keyPath:'id'});
+        ws.createIndex('date','date');
       }
-      if (!d.objectStoreNames.contains('settings')) {
-        d.createObjectStore('settings', { keyPath: 'key' });
-      }
-      if (!d.objectStoreNames.contains('plan')) {
-        d.createObjectStore('plan', { keyPath: 'key' });
-      }
+      if (!d.objectStoreNames.contains('kv')) d.createObjectStore('kv',{keyPath:'k'});
     };
-    req.onsuccess = e => { db = e.target.result; res(db); };
-    req.onerror = () => rej(req.error);
+    r.onsuccess = e => { db = e.target.result; res(db); };
+    r.onerror = () => rej(r.error);
   });
 }
+const dbGet = (s,k) => new Promise((res,rej)=>{const t=db.transaction(s,'readonly');const r=t.objectStore(s).get(k);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const dbPut = (s,v) => new Promise((res,rej)=>{const t=db.transaction(s,'readwrite');const r=t.objectStore(s).put(v);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+const dbDel = (s,k) => new Promise((res,rej)=>{const t=db.transaction(s,'readwrite');const r=t.objectStore(s).delete(k);r.onsuccess=()=>res();r.onerror=()=>rej(r.error)});
+const dbAll = (s) => new Promise((res,rej)=>{const t=db.transaction(s,'readonly');const r=t.objectStore(s).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 
-function dbGet(store, key) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readonly');
-    const req = tx.objectStore(store).get(key);
-    req.onsuccess = () => res(req.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function dbPut(store, value) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readwrite');
-    const req = tx.objectStore(store).put(value);
-    req.onsuccess = () => res(req.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function dbDelete(store, key) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readwrite');
-    const req = tx.objectStore(store).delete(key);
-    req.onsuccess = () => res();
-    req.onerror = () => rej(req.error);
-  });
-}
-
-function dbGetAll(store) {
-  return new Promise((res, rej) => {
-    const tx = db.transaction(store, 'readonly');
-    const req = tx.objectStore(store).getAll();
-    req.onsuccess = () => res(req.result);
-    req.onerror = () => rej(req.error);
-  });
-}
-
-// ─── Settings ────────────────────────────────────────────────────
-let settings = {
-  name: 'Pedro',
-  age: 23,
-  targetPaceSec: 254, // 4:14
-  days: 5,
-  hrmax: 197,
-  vo2max: 57
-};
-
+// ── Settings ───────────────────────────────────
+let S = {name:'',age:23,weight:70,height:180,targetPaceSec:254,days:5,hrmax:197,vo2max:57};
 async function loadSettings() {
-  const saved = await dbGet('settings', 'profile');
-  if (saved) settings = { ...settings, ...saved.value };
-  renderSettings();
+  const saved = await dbGet('kv','settings');
+  if (saved) S = {...S,...saved.v};
 }
-
 async function saveSettings() {
-  await dbPut('settings', { key: 'profile', value: settings });
+  await dbPut('kv',{k:'settings',v:S});
   renderSettings();
 }
-
 function renderSettings() {
-  const p = settings;
-  const pm = Math.floor(p.targetPaceSec/60), ps = p.targetPaceSec%60;
-  el('settingName').textContent = p.name;
-  el('settingAge').textContent = p.age + ' anos';
-  el('settingTargetPace').textContent = `${pm}:${String(ps).padStart(2,'0')} min/km`;
-  el('settingDays').textContent = p.days + ' dias';
-  el('settingHrmax').textContent = p.hrmax + ' bpm';
-  el('profileInitial').textContent = p.name[0].toUpperCase();
-  el('profileName').textContent = p.name;
-  el('profileMeta').textContent = `${p.age} anos · ${p.days} dias/semana`;
-  el('profileVo2').textContent = `VO2max estimado: ~${p.vo2max} ml/kg/min`;
-  const pm2 = Math.floor(p.targetPaceSec/60), ps2 = p.targetPaceSec%60;
-  el('topbarPaceVal').textContent = `${pm2}:${String(ps2).padStart(2,'0')}`;
+  const pm = fmtPace(S.targetPaceSec);
+  el('sName').textContent = S.name;
+  el('sAge').textContent = S.age + ' anos';
+  el('sWeight').textContent = S.weight + ' kg';
+  el('sHeight').textContent = S.height + ' cm';
+  el('sTargetPace').textContent = pm + ' min/km';
+  el('sDays').textContent = S.days + ' dias';
+  el('sHrmax').textContent = S.hrmax + ' bpm';
+  el('topPace').textContent = pm;
+  el('profileInitial').textContent = (S.name||'?')[0].toUpperCase();
+  el('profileName').textContent = sanitize(S.name);
+  el('profileMeta').textContent = `${S.age} anos · ${S.weight}kg · ${S.height}cm · ${S.days} dias/semana`;
+  el('profileVo2').textContent = `VO2max estimado: ~${S.vo2max} ml/kg/min`;
+  renderHRZones();
 }
 
 function editSetting(key) {
-  const labels = { name:'Nome', age:'Idade', targetPace:'Pace alvo (ex: 4:14)', days:'Dias/semana', hrmax:'HR máximo (bpm)' };
-  const current = {
-    name: settings.name,
-    age: settings.age,
-    targetPace: `${Math.floor(settings.targetPaceSec/60)}:${String(settings.targetPaceSec%60).padStart(2,'0')}`,
-    days: settings.days,
-    hrmax: settings.hrmax
-  }[key];
-  const val = prompt(labels[key], current);
+  const labels = {name:'Nome',age:'Idade',weight:'Peso (kg)',height:'Altura (cm)',targetPace:'Pace alvo (ex: 4:14)',days:'Dias/semana',hrmax:'HR máximo (bpm)'};
+  const cur = {name:S.name,age:S.age,weight:S.weight,height:S.height,targetPace:fmtPace(S.targetPaceSec),days:S.days,hrmax:S.hrmax}[key];
+  const val = prompt(labels[key], cur);
   if (val === null) return;
-  if (key === 'name') settings.name = val.trim() || settings.name;
-  else if (key === 'age') { const v = parseInt(val); if (!isNaN(v)) settings.age = v; }
-  else if (key === 'targetPace') {
-    const m = val.match(/^(\d+):(\d{2})$/);
-    if (m) settings.targetPaceSec = parseInt(m[1])*60 + parseInt(m[2]);
-  }
-  else if (key === 'days') { const v = parseInt(val); if (v>0&&v<=7) settings.days = v; }
-  else if (key === 'hrmax') { const v = parseInt(val); if (!isNaN(v)) settings.hrmax = v; }
+  const v = val.trim();
+  if (key==='name') S.name = v.slice(0,30) || S.name;
+  else if (key==='age') { const n=parseInt(v); if(n>=10&&n<=90) S.age=n; }
+  else if (key==='weight') { const n=parseFloat(v); if(n>=30&&n<=200) S.weight=n; }
+  else if (key==='height') { const n=parseInt(v); if(n>=100&&n<=230) S.height=n; }
+  else if (key==='targetPace') { const s=parsePaceStr(v); if(s) S.targetPaceSec=s; }
+  else if (key==='days') { const n=parseInt(v); if(n>=2&&n<=7) S.days=n; }
+  else if (key==='hrmax') { const n=parseInt(v); if(n>=100&&n<=230) S.hrmax=n; }
   saveSettings();
-  toast('Configuração salva');
+  toast('Salvo');
 }
 
-// ─── GPX Parser ──────────────────────────────────────────────────
+function parsePaceStr(str) {
+  const m = str.match(/^(\d+):(\d{2})$/);
+  if (!m) return null;
+  const s = parseInt(m[1])*60+parseInt(m[2]);
+  return (s>=120&&s<=720)?s:null;
+}
+
+// ── Onboarding ─────────────────────────────────
+function completeOnboarding() {
+  const name = el('obName').value.trim();
+  const age = parseInt(el('obAge').value);
+  const weight = parseFloat(el('obWeight').value);
+  const height = parseInt(el('obHeight').value);
+  const paceStr = el('obPace').value.trim();
+  const days = parseInt(el('obDays').value);
+
+  if (!name) { alert('Coloca seu nome'); return; }
+  if (!age||age<10||age>90) { alert('Idade inválida'); return; }
+  const pSec = parsePaceStr(paceStr);
+  if (!pSec) { alert('Pace inválido (ex: 4:14)'); return; }
+
+  S.name = name.slice(0,30);
+  S.age = age;
+  S.weight = weight||70;
+  S.height = height||180;
+  S.targetPaceSec = pSec;
+  S.days = (days>=2&&days<=7)?days:5;
+  S.hrmax = Math.round(207 - 0.7*age);
+
+  saveSettings();
+  dbPut('kv',{k:'onboarded',v:true});
+
+  el('onboardOverlay').classList.add('hidden');
+  el('appShell').style.display = '';
+  currentPlan = generatePlan();
+  savePlan();
+  renderPlan();
+  renderHRZones();
+}
+
+// ── GPX Parser ─────────────────────────────────
 function parseGPX(text) {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(text, 'text/xml');
+  const doc = new DOMParser().parseFromString(text,'text/xml');
+  if (doc.querySelector('parsererror')) throw new Error('GPX inválido');
   const trkpts = doc.querySelectorAll('trkpt');
-  if (!trkpts.length) throw new Error('Nenhum ponto GPS encontrado');
+  if (!trkpts.length) throw new Error('Sem pontos GPS');
 
-  const NS_EXT = 'http://www.garmin.com/xmlschemas/TrackPointExtension/v1';
-  const points = [];
-  const hrValues = [];
-
+  const points=[], hrAll=[];
   trkpts.forEach(pt => {
-    const lat = parseFloat(pt.getAttribute('lat'));
-    const lon = parseFloat(pt.getAttribute('lon'));
-    const ele = parseFloat(pt.querySelector('ele')?.textContent || '0');
-    const timeStr = pt.querySelector('time')?.textContent;
-    const time = timeStr ? new Date(timeStr) : null;
-
-    // HR from Garmin extension
-    let hr = null;
-    const hrEl = pt.querySelector('hr') ||
-      pt.getElementsByTagNameNS(NS_EXT, 'hr')[0];
-    if (hrEl) hr = parseInt(hrEl.textContent);
-    if (hr && !isNaN(hr)) hrValues.push(hr);
-
-    points.push({ lat, lon, ele, time, hr });
+    const lat=parseFloat(pt.getAttribute('lat'));
+    const lon=parseFloat(pt.getAttribute('lon'));
+    const ele=parseFloat(pt.querySelector('ele')?.textContent||'0');
+    const time=pt.querySelector('time')?.textContent?new Date(pt.querySelector('time').textContent):null;
+    let hr=null;
+    const hrEl=pt.querySelector('hr')||pt.querySelector('[localName="hr"]');
+    // Also check Garmin extension namespace
+    const exts=pt.querySelectorAll('*');
+    exts.forEach(e=>{ if(e.localName==='hr'&&!isNaN(parseInt(e.textContent))) hr=parseInt(e.textContent); });
+    if(hrEl&&!hr) hr=parseInt(hrEl.textContent)||null;
+    if(hr&&hr>30&&hr<250) hrAll.push(hr);
+    if(!isNaN(lat)&&!isNaN(lon)) points.push({lat,lon,ele,time,hr});
   });
 
-  return calcStats(points, hrValues, doc);
+  const name=doc.querySelector('name')?.textContent||'Corrida';
+  return calcStats(points,hrAll,name);
 }
 
-// ─── FIT Parser (simplified) ─────────────────────────────────────
-function parseFIT(buffer) {
-  // Minimal FIT parser - extract records
-  const bytes = new Uint8Array(buffer);
-  const points = [];
-  const hrValues = [];
+// ── FIT Parser ─────────────────────────────────
+function parseFIT(buf) {
+  const bytes=new Uint8Array(buf);
+  const view=new DataView(buf);
+  const dataSize=view.getUint32(4,true);
+  const end=14+dataSize;
+  let off=14;
+  const defs={};
+  const points=[],hrAll=[];
+  let totalDist=0,tStart=null,tEnd=null;
+  const EPOCH=631065600;
 
-  // FIT header: 14 bytes
-  let offset = 14;
-  const dataSize = new DataView(buffer).getUint32(4, true);
-  const endOffset = 14 + dataSize;
-
-  const localMsgDefs = {};
-  let totalDist = 0, startTime = null, endTime = null;
-  const FIT_EPOCH = 631065600; // Jan 1, 1989 in unix seconds
-
-  while (offset < endOffset && offset < bytes.length - 2) {
-    const recordHeader = bytes[offset];
-    offset++;
-
-    const isDefinition = (recordHeader & 0x40) !== 0;
-    const localMsgType = recordHeader & 0x0F;
-
-    if (isDefinition) {
-      offset++; // reserved
-      const arch = bytes[offset++];
-      const globalMsgNum = arch === 0
-        ? bytes[offset] | (bytes[offset+1] << 8)
-        : (bytes[offset] << 8) | bytes[offset+1];
-      offset += 2;
-      const numFields = bytes[offset++];
-      const fields = [];
-      for (let i = 0; i < numFields; i++) {
-        fields.push({ defNum: bytes[offset], size: bytes[offset+1], type: bytes[offset+2] });
-        offset += 3;
-      }
-      localMsgDefs[localMsgType] = { globalMsgNum, arch, fields };
-
-      // Developer fields
-      if (recordHeader & 0x20) {
-        const numDevFields = bytes[offset++];
-        for (let i = 0; i < numDevFields; i++) offset += 3;
-      }
+  while(off<end&&off<bytes.length-1){
+    const hdr=bytes[off++];
+    const isDef=(hdr&0x40)!==0;
+    const lmt=hdr&0x0F;
+    if(isDef){
+      off++; // reserved
+      const arch=bytes[off++];
+      const gmt=arch===0?(bytes[off]|(bytes[off+1]<<8)):((bytes[off]<<8)|bytes[off+1]);
+      off+=2;
+      const nf=bytes[off++];
+      const fields=[];
+      for(let i=0;i<nf;i++){fields.push({n:bytes[off],sz:bytes[off+1]});off+=3;}
+      defs[lmt]={gmt,arch,fields};
+      if(hdr&0x20){const nd=bytes[off++];for(let i=0;i<nd;i++)off+=3;}
     } else {
-      const def = localMsgDefs[localMsgType];
-      if (!def) break;
-      const recStart = offset;
-      const recData = {};
-
-      def.fields.forEach(f => {
-        if (offset + f.size > bytes.length) return;
-        const view = new DataView(buffer, offset, f.size);
-        let val;
-        if (f.size === 4) val = def.arch === 0 ? view.getUint32(0, true) : view.getUint32(0, false);
-        else if (f.size === 2) val = def.arch === 0 ? view.getUint16(0, true) : view.getUint16(0, false);
-        else if (f.size === 1) val = view.getUint8(0);
-        else val = 0;
-        recData[f.defNum] = val;
-        offset += f.size;
+      const def=defs[lmt]; if(!def){break;}
+      const rec={};
+      def.fields.forEach(f=>{
+        if(off+f.sz>bytes.length)return;
+        const dv=new DataView(buf,off,f.sz);
+        let v=0;
+        if(f.sz===4)v=def.arch===0?dv.getUint32(0,true):dv.getUint32(0,false);
+        else if(f.sz===2)v=def.arch===0?dv.getUint16(0,true):dv.getUint16(0,false);
+        else if(f.sz===1)v=dv.getUint8(0);
+        rec[f.n]=v; off+=f.sz;
       });
-
-      // Message 20 = record
-      if (def.globalMsgNum === 20) {
-        const lat = recData[0] !== undefined ? recData[0] * (180 / Math.pow(2, 31)) : null;
-        const lon = recData[1] !== undefined ? recData[1] * (180 / Math.pow(2, 31)) : null;
-        const dist = recData[5] !== undefined ? recData[5] / 100 : null; // cm → m
-        const hr = recData[3] !== undefined && recData[3] < 250 ? recData[3] : null;
-        const ts = recData[253] !== undefined ? new Date((recData[253] + FIT_EPOCH) * 1000) : null;
-        const alt = recData[2] !== undefined ? recData[2] / 5 - 500 : 0;
-
-        if (ts) {
-          if (!startTime) startTime = ts;
-          endTime = ts;
-        }
-        if (dist !== null) totalDist = Math.max(totalDist, dist);
-        if (hr) hrValues.push(hr);
-        if (lat && lon && Math.abs(lat) < 90 && Math.abs(lon) < 180) {
-          points.push({ lat, lon, ele: alt, time: ts, hr });
-        }
+      if(def.gmt===20){
+        const lat=rec[0]!==undefined?rec[0]*(180/Math.pow(2,31)):null;
+        const lon=rec[1]!==undefined?rec[1]*(180/Math.pow(2,31)):null;
+        const dist=rec[5]!==undefined?rec[5]/100:null;
+        const hr=rec[3]!==undefined&&rec[3]>30&&rec[3]<250?rec[3]:null;
+        const ts=rec[253]!==undefined?new Date((rec[253]+EPOCH)*1000):null;
+        const alt=rec[2]!==undefined?rec[2]/5-500:0;
+        if(ts){if(!tStart)tStart=ts;tEnd=ts;}
+        if(dist!==null)totalDist=Math.max(totalDist,dist);
+        if(hr)hrAll.push(hr);
+        if(lat&&lon&&Math.abs(lat)<90&&Math.abs(lon)<180)points.push({lat,lon,ele:alt,time:ts,hr});
       }
     }
   }
-
-  if (!points.length) throw new Error('Arquivo FIT sem dados de posição');
-  return calcStats(points, hrValues, null, totalDist, startTime, endTime);
+  if(!points.length)throw new Error('FIT sem dados de posição');
+  return calcStats(points,hrAll,'Corrida FIT',totalDist,tStart,tEnd);
 }
 
-function calcStats(points, hrValues, gpxDoc, fitDist, fitStart, fitEnd) {
-  // Distance
+// ── Haversine ──────────────────────────────────
+function haversine(p1,p2){
+  const R=6371000,dLat=(p2.lat-p1.lat)*Math.PI/180,dLon=(p2.lon-p1.lon)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(p1.lat*Math.PI/180)*Math.cos(p2.lat*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+// ── Grade-Adjusted Pace (GAP) ──────────────────
+// Minetti formula: energy cost factor based on gradient
+function gradeAdjFactor(gradePct) {
+  const g = Math.max(-0.45, Math.min(0.45, gradePct/100));
+  // Minetti et al. polynomial
+  return 19.5*g**5 - 46.3*g**4 - 19.5*g**3 + 43.3*g**2 + 3.6*g + 1.0;
+}
+
+// ── calcStats ──────────────────────────────────
+function calcStats(points, hrAll, name, fitDist, fitStart, fitEnd) {
   let dist = fitDist || 0;
-  if (!fitDist && points.length > 1) {
-    for (let i = 1; i < points.length; i++) {
-      dist += haversine(points[i-1], points[i]);
+  let eleGain=0, eleLoss=0;
+
+  // GPS rate detection: median interval between points
+  const intervals=[];
+  for(let i=1;i<Math.min(points.length,50);i++){
+    if(points[i].time&&points[i-1].time){
+      intervals.push((points[i].time-points[i-1].time)/1000);
+    }
+  }
+  intervals.sort((a,b)=>a-b);
+  const gpsRate = intervals.length ? intervals[Math.floor(intervals.length/2)] : 1; // seconds between points
+
+  // Segment-level calcs with GPS-rate-aware smoothing
+  const segments=[];
+  for(let i=1;i<points.length;i++){
+    const dd=haversine(points[i-1],points[i]);
+    const dt=points[i].time&&points[i-1].time?(points[i].time-points[i-1].time)/1000:gpsRate;
+    const dEle=points[i].ele-points[i-1].ele;
+    const grade=dd>0?(dEle/dd)*100:0;
+    const speed=dt>0?dd/dt:0; // m/s
+
+    if(!fitDist) dist+=dd;
+    if(dEle>0)eleGain+=dEle;
+    else eleLoss+=Math.abs(dEle);
+
+    segments.push({dd,dt,dEle,grade,speed,pt:points[i]});
+  }
+
+  // Moving time: exclude segments where speed < 0.5 m/s (GPS-rate-aware)
+  let movingTime=0, movingDist=0;
+  // Use smoothed speed: rolling window based on gpsRate
+  const windowSize = Math.max(1, Math.round(10/gpsRate)); // ~10s window
+  for(let i=0;i<segments.length;i++){
+    const w=segments.slice(Math.max(0,i-windowSize),i+windowSize+1);
+    const avgSpd=w.reduce((a,s)=>a+s.speed,0)/w.length;
+    if(avgSpd>0.5){movingTime+=segments[i].dt;movingDist+=segments[i].dd;}
+  }
+
+  // Effective distance corrected for elevation (grade-adjusted)
+  let gaDistEff=0;
+  for(const seg of segments){
+    gaDistEff+=seg.dd*gradeAdjFactor(seg.grade);
+  }
+
+  const totalDist=dist;
+  const paceSec=movingDist>0?movingTime/(movingDist/1000):0;
+  const gapSec=gaDistEff>0?movingTime/(gaDistEff/1000):paceSec; // grade-adjusted pace
+
+  const avgHR=hrAll.length?Math.round(hrAll.reduce((a,b)=>a+b,0)/hrAll.length):null;
+  const maxHR=hrAll.length?Math.max(...hrAll):null;
+
+  // HR zones time distribution
+  const hrZoneTimes=[0,0,0,0,0];
+  for(const seg of segments){
+    if(seg.pt.hr&&S.hrmax){
+      const pct=seg.pt.hr/S.hrmax;
+      const z=pct<0.6?0:pct<0.7?1:pct<0.8?2:pct<0.9?3:4;
+      hrZoneTimes[z]+=seg.dt;
     }
   }
 
-  // Time
-  const startTime = fitStart || points[0]?.time;
-  const endTime = fitEnd || points[points.length-1]?.time;
-  const durationSec = startTime && endTime ? (endTime - startTime) / 1000 : 0;
-
-  // Moving time (simple: remove stops > 5s without movement)
-  let movingTime = durationSec;
-  if (points.length > 1 && points[0]?.time) {
-    let moving = 0;
-    for (let i = 1; i < points.length; i++) {
-      const dt = (points[i].time - points[i-1].time) / 1000;
-      const dd = haversine(points[i-1], points[i]);
-      const speed = dd / dt; // m/s
-      if (speed > 0.5) moving += dt; // > 1.8 km/h = moving
+  // KM splits with GAP
+  const splits=[];
+  let splitDist=0, splitTime=0, splitHRs=[], splitEle=0, splitStart=0;
+  for(let i=0;i<segments.length;i++){
+    splitDist+=segments[i].dd;
+    splitTime+=segments[i].dt;
+    if(segments[i].pt.hr) splitHRs.push(segments[i].pt.hr);
+    if(segments[i].dEle>0) splitEle+=segments[i].dEle;
+    if(splitDist>=1000){
+      const sGAP=splitTime/(splitDist*gradeAdjFactor(splitEle/splitDist*100)/1000);
+      splits.push({
+        km:splits.length+1,
+        distM:Math.round(splitDist),
+        timeSec:Math.round(splitTime),
+        paceSec:Math.round(splitTime/(splitDist/1000)),
+        gapSec:Math.round(sGAP),
+        avgHR:splitHRs.length?Math.round(splitHRs.reduce((a,b)=>a+b,0)/splitHRs.length):null,
+        eleGain:Math.round(splitEle)
+      });
+      splitDist=0;splitTime=0;splitHRs=[];splitEle=0;
     }
-    movingTime = moving || durationSec;
   }
-
-  const paceSec = dist > 0 ? movingTime / (dist / 1000) : 0;
-  const avgHR = hrValues.length ? Math.round(hrValues.reduce((a,b)=>a+b,0)/hrValues.length) : null;
-  const maxHR = hrValues.length ? Math.max(...hrValues) : null;
-
-  // Elevation
-  let eleGain = 0;
-  for (let i = 1; i < points.length; i++) {
-    const dEle = points[i].ele - points[i-1].ele;
-    if (dEle > 0) eleGain += dEle;
-  }
-
-  // Track name from GPX
-  const name = gpxDoc?.querySelector('name')?.textContent || 'Corrida';
-
-  return {
-    name,
-    date: startTime || new Date(),
-    distKm: Math.round(dist / 10) / 100,
-    durationSec: Math.round(durationSec),
-    movingTimeSec: Math.round(movingTime),
-    paceSec: Math.round(paceSec),
-    avgHR,
-    maxHR,
-    eleGain: Math.round(eleGain),
-    pointCount: points.length
-  };
-}
-
-function haversine(p1, p2) {
-  const R = 6371000;
-  const dLat = (p2.lat - p1.lat) * Math.PI / 180;
-  const dLon = (p2.lon - p1.lon) * Math.PI / 180;
-  const a = Math.sin(dLat/2)**2 + Math.cos(p1.lat*Math.PI/180)*Math.cos(p2.lat*Math.PI/180)*Math.sin(dLon/2)**2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-// ─── Plan Engine ─────────────────────────────────────────────────
-const BASE_PLAN = [
-  { day: 'Segunda', type: 'easy',     title: 'Corrida fácil', badge: 'badge-easy',     desc: 'Zona 2 — pace confortável, conversa possível' },
-  { day: 'Terça',   type: 'rest',     title: 'Descanso ativo', badge: 'badge-rest',    desc: 'Caminhada leve ou alongamento' },
-  { day: 'Quarta',  type: 'tempo',    title: 'Tempo Run',      badge: 'badge-tempo',   desc: 'Aquecimento + bloco no pace alvo + volta' },
-  { day: 'Quinta',  type: 'interval', title: 'Intervalados',   badge: 'badge-interval',desc: 'Repetições curtas acima do pace alvo + recuperação' },
-  { day: 'Sexta',   type: 'rest',     title: 'Descanso',       badge: 'badge-rest',    desc: 'Recuperação total' },
-  { day: 'Sábado',  type: 'long',     title: 'Long Run',       badge: 'badge-long',    desc: 'Ritmo bem tranquilo, volume maior' },
-  { day: 'Domingo', type: 'rest',     title: 'Descanso',       badge: 'badge-rest',    desc: 'Recuperação ativa ou folga total' }
-];
-
-let currentPlan = null;
-
-async function loadPlan() {
-  const saved = await dbGet('plan', 'current');
-  if (saved) {
-    currentPlan = saved.value;
-  } else {
-    currentPlan = generateBasePlan();
-    await savePlan();
-  }
-  renderPlan();
-}
-
-function generateBasePlan() {
-  const tgt = settings.targetPaceSec;
-  const pm = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
-
-  return {
-    title: `PLANO ${pm(tgt)}`,
-    version: 1,
-    updatedAt: Date.now(),
-    days: BASE_PLAN.map(d => ({
-      ...d,
-      desc: buildDayDesc(d.type, tgt)
-    }))
-  };
-}
-
-function buildDayDesc(type, tgtSec) {
-  const pm = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
-  const easy = tgtSec + 60;
-  const tempo = tgtSec + 10;
-  const interval = tgtSec - 15;
-  const longPace = tgtSec + 80;
-  switch(type) {
-    case 'easy':     return `6 km a ${pm(easy)}–${pm(easy+20)} · HR < ${Math.round(settings.hrmax * 0.73)} bpm`;
-    case 'tempo':    return `1km aquecimento + 4km a ${pm(tempo)}–${pm(tempo+10)} + 1km volta · HR 158–170`;
-    case 'interval': return `6× 800m a ${pm(interval)} com 90s caminhada · HR > 170`;
-    case 'long':     return `10–12 km a ${pm(longPace)} · ritmo conversa`;
-    case 'rest':     return 'Recuperação — caminhada leve ou folga total';
-    default:         return '';
-  }
-}
-
-async function savePlan() {
-  await dbPut('plan', { key: 'current', value: currentPlan });
-}
-
-function adjustPlan(workout, allWorkouts) {
-  const tgt = settings.targetPaceSec;
-  const pm = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
-  const changes = [];
-  let planChanged = false;
-
-  const recent = allWorkouts.slice(-5);
-  const avgPace = recent.length
-    ? recent.reduce((a,w)=>a+w.paceSec,0)/recent.length
-    : workout.paceSec;
-
-  const paceVsTarget = workout.paceSec - tgt;
-  const hrPct = workout.avgHR && settings.hrmax ? workout.avgHR / settings.hrmax : null;
-
-  // Rule 1: Pace much faster than target → athlete is ready to push
-  if (paceVsTarget < -20 && recent.length >= 2) {
-    const newTgt = Math.max(tgt - 5, 210); // don't go below 3:30
-    settings.targetPaceSec = newTgt;
-    saveSettings();
-    currentPlan = generateBasePlan();
-    planChanged = true;
-    changes.push({
-      day: 'Todos os dias',
-      text: `Pace alvo atualizado de ${pm(tgt)} → <em>${pm(newTgt)}</em>. Você está consistentemente mais rápido que o alvo.`
+  // Partial last split
+  if(splitDist>50){
+    splits.push({
+      km:splits.length+1,
+      distM:Math.round(splitDist),
+      timeSec:Math.round(splitTime),
+      paceSec:Math.round(splitTime/(splitDist/1000)),
+      gapSec:Math.round(splitTime/(splitDist/1000)),
+      avgHR:splitHRs.length?Math.round(splitHRs.reduce((a,b)=>a+b,0)/splitHRs.length):null,
+      eleGain:Math.round(splitEle),
+      partial:true
     });
   }
 
-  // Rule 2: HR very high (>90% HRmax) at target pace → back off
-  if (hrPct && hrPct > 0.92 && Math.abs(paceVsTarget) < 30) {
-    const easyIdx = currentPlan.days.findIndex(d => d.type === 'easy');
-    if (easyIdx >= 0) {
-      currentPlan.days[easyIdx].desc = `7 km a ${pm(tgt+80)}–${pm(tgt+100)} · recuperação ativa · HR < ${Math.round(settings.hrmax * 0.70)} bpm`;
-      currentPlan.days[easyIdx].badge = 'badge-updated';
-      planChanged = true;
-      changes.push({
-        day: currentPlan.days[easyIdx].day,
-        text: `HR elevado detectado (${workout.avgHR} bpm). Corrida fácil ficou mais leve para priorizar recuperação.`
-      });
-    }
-  }
+  // Sprints: detect efforts above threshold speed, GPS-rate corrected
+  const sprints = detectSprints(segments, gpsRate);
 
-  // Rule 3: Pace much slower than target → needs more easy volume
-  if (paceVsTarget > 40 && recent.length >= 3) {
-    const longIdx = currentPlan.days.findIndex(d => d.type === 'long');
-    if (longIdx >= 0) {
-      currentPlan.days[longIdx].desc = `12–14 km a ${pm(tgt+90)} · construir base aeróbica`;
-      currentPlan.days[longIdx].badge = 'badge-updated';
-      planChanged = true;
-      changes.push({
-        day: currentPlan.days[longIdx].day,
-        text: `Pace abaixo do alvo. Volume do Long Run aumentado para fortalecer base aeróbica.`
-      });
-    }
-  }
+  const startTime=fitStart||points[0]?.time;
 
-  // Rule 4: Good workout, HR normal → add intensity to intervals
-  if (paceVsTarget < 10 && hrPct && hrPct < 0.88) {
-    const intIdx = currentPlan.days.findIndex(d => d.type === 'interval');
-    if (intIdx >= 0) {
-      currentPlan.days[intIdx].desc = `8× 800m a ${pm(tgt-20)} com 90s caminhada · você está pronto para mais`;
-      currentPlan.days[intIdx].badge = 'badge-updated';
-      planChanged = true;
-      changes.push({
-        day: currentPlan.days[intIdx].day,
-        text: `Desempenho sólido com HR controlado. Intervalados agora com <em>8 repetições</em> (era 6).`
-      });
-    }
-  }
-
-  // Rule 5: Elevation gain high → extra recovery
-  if (workout.eleGain > 80) {
-    const restIdx = currentPlan.days.findIndex(d => d.type === 'rest' && d.day === 'Sexta');
-    if (restIdx >= 0) {
-      currentPlan.days[restIdx].desc = 'Recuperação total obrigatória — ganho de elevação elevado no último treino';
-      planChanged = true;
-      changes.push({
-        day: 'Sexta',
-        text: `Ganho de elevação alto (+${workout.eleGain}m). Descanso de sexta reforçado.`
-      });
-    }
-  }
-
-  if (planChanged) {
-    currentPlan.version = (currentPlan.version || 1) + 1;
-    currentPlan.updatedAt = Date.now();
-    savePlan();
-  }
-
-  return { changes, planChanged };
+  return {
+    name, gpsRate:Math.round(gpsRate),
+    date:(startTime||new Date()).toISOString(),
+    distKm:Math.round(totalDist/10)/100,
+    movingTimeSec:Math.round(movingTime),
+    paceSec:Math.round(paceSec),
+    gapSec:Math.round(gapSec),
+    avgHR, maxHR, hrAll: hrAll.slice(0,500), // cap for storage
+    hrZoneTimes,
+    eleGain:Math.round(eleGain), eleLoss:Math.round(eleLoss),
+    splits, sprints, pointCount:points.length
+  };
 }
 
-// ─── File Handling ───────────────────────────────────────────────
-async function handleFiles(files) {
-  if (!files.length) return;
-  const file = files[0];
-  showProcessing(true, 'Lendo arquivo...', file.name);
+// ── Sprint Detector ─────────────────────────────
+function detectSprints(segments, gpsRate) {
+  if(segments.length<5) return [];
 
-  try {
-    let workout;
-    const ext = file.name.split('.').pop().toLowerCase();
+  // Smooth speeds over ~8 second window to handle GPS gaps
+  const winSz=Math.max(2,Math.round(8/gpsRate));
+  const smoothed=segments.map((_,i)=>{
+    const w=segments.slice(Math.max(0,i-winSz),i+winSz+1);
+    return w.reduce((a,s)=>a+s.speed,0)/w.length;
+  });
 
-    if (ext === 'gpx') {
-      const text = await file.text();
-      updateProcessing('Parseando GPS...', 'Calculando distância e pace');
-      await delay(300);
-      workout = parseGPX(text);
-    } else if (ext === 'fit') {
-      const buffer = await file.arrayBuffer();
-      updateProcessing('Decodificando FIT...', 'Formato binário Garmin');
-      await delay(300);
-      workout = parseFIT(buffer);
-    } else {
-      throw new Error('Formato não suportado. Use GPX ou FIT.');
+  const avgSpeed=smoothed.reduce((a,b)=>a+b,0)/smoothed.length;
+  // Sprint threshold: 15% faster than avg, min 3.3 m/s (~5:03/km)
+  const threshold=Math.max(avgSpeed*1.15, 3.3);
+
+  const sprints=[];
+  let inSprint=false,sDist=0,sTime=0,sHRs=[],sMaxHR=0;
+
+  for(let i=0;i<smoothed.length;i++){
+    const isSprint=smoothed[i]>=threshold;
+    if(!inSprint&&isSprint){ inSprint=true;sDist=0;sTime=0;sHRs=[];sMaxHR=0; }
+    if(inSprint){
+      sDist+=segments[i].dd; sTime+=segments[i].dt;
+      if(segments[i].pt.hr){ sHRs.push(segments[i].pt.hr); sMaxHR=Math.max(sMaxHR,segments[i].pt.hr); }
+      const ended=!isSprint||i===smoothed.length-1;
+      if(ended){
+        // Filter: min 150m, min 20s (GPS-rate aware: at least 3 GPS points)
+        const minPts=Math.max(3,Math.round(20/gpsRate));
+        if(sDist>=150&&sTime>=20){
+          const pace=Math.round(sTime/(sDist/1000));
+          const avgHR=sHRs.length?Math.round(sHRs.reduce((a,b)=>a+b,0)/sHRs.length):null;
+          sprints.push({n:sprints.length+1,distM:Math.round(sDist),timeSec:Math.round(sTime),paceSec:pace,avgHR,maxHR:sMaxHR||null});
+        }
+        inSprint=false;
+      }
     }
+  }
+  return sprints;
+}
 
-    workout.id = Date.now().toString();
-    workout.fileName = file.name;
-    workout.date = workout.date instanceof Date ? workout.date.toISOString() : new Date().toISOString();
+// ── Plan Engine ────────────────────────────────
+let currentPlan=null;
+const DAYS_BASE=[
+  {day:'Segunda',type:'easy',    title:'Corrida fácil',badge:'b-easy'},
+  {day:'Terça',  type:'rest',    title:'Descanso ativo',badge:'b-rest'},
+  {day:'Quarta', type:'tempo',   title:'Tempo Run',     badge:'b-tempo'},
+  {day:'Quinta', type:'interval',title:'Intervalados',  badge:'b-interval'},
+  {day:'Sexta',  type:'rest',    title:'Descanso',      badge:'b-rest'},
+  {day:'Sábado', type:'long',    title:'Long Run',      badge:'b-long'},
+  {day:'Domingo',type:'rest',    title:'Descanso',      badge:'b-rest'}
+];
 
-    updateProcessing('Salvando treino...', 'Persistindo no IndexedDB');
-    await delay(200);
-    await dbPut('workouts', workout);
+function generatePlan(){
+  const t=S.targetPaceSec;
+  const pm=fmtPace;
+  // Target time per 800m tiro
+  const intPace=t-15;
+  const tiroSec=Math.round(intPace*0.8);
+  // Consider weight and height for BMI-based load
+  const bmi=S.weight/((S.height/100)**2);
+  const loadFactor=bmi>27?0.9:bmi<20?1.05:1.0; // slightly reduce load for higher BMI
 
-    updateProcessing('Ajustando plano...', 'Analisando tendências');
-    await delay(400);
+  const easyKm=Math.round(6*loadFactor);
+  const longKm=Math.round(11*loadFactor);
 
-    const all = await dbGetAll('workouts');
-    all.sort((a,b) => new Date(a.date) - new Date(b.date));
-    const { changes } = adjustPlan(workout, all);
+  return {
+    title:`PLANO ${pm(t)}`,version:1,updatedAt:Date.now(),
+    days:DAYS_BASE.map(d=>({...d,desc:dayDesc(d.type,t,tiroSec,easyKm,longKm)}))
+  };
+}
 
-    // Auto-prune: keep max 50 workouts, delete oldest
-    if (all.length > 50) {
-      const toDelete = all.slice(0, all.length - 50);
-      for (const w of toDelete) await dbDelete('workouts', w.id);
-    }
-
-    showProcessing(false);
-    showResult(workout);
-    showAdjustments(changes);
-    renderPlan();
-    updateStats();
-    updateStorage();
-
-  } catch (err) {
-    showProcessing(false);
-    toast('Erro: ' + err.message);
-    console.error(err);
+function dayDesc(type,t,tiroSec,easyKm,longKm){
+  const pm=fmtPace;
+  const tmm=Math.floor(tiroSec/60),tss=String(tiroSec%60).padStart(2,'0');
+  switch(type){
+    case 'easy':     return `${easyKm} km a ${pm(t+60)}–${pm(t+80)} · HR < ${Math.round(S.hrmax*0.72)} bpm · foco em respiração`;
+    case 'tempo':    return `1km aquec. + 4km a ${pm(t+8)}–${pm(t+15)} + 1km volta · HR 158–170`;
+    case 'interval': return `6× 800m a ${pm(t-15)} · tempo alvo por tiro: ${tmm}:${tss} · 90s caminhada entre tiros`;
+    case 'long':     return `${longKm} km a ${pm(t+80)} · ritmo conversa · elevar resistência aeróbica`;
+    case 'rest':     return 'Recuperação — caminhada leve ou descanso total';
+    default: return '';
   }
 }
 
-function showProcessing(active, title='', msg='') {
-  el('processingCard').classList.toggle('active', active);
-  el('resultCard').classList.remove('active');
-  el('adjustmentCard').classList.remove('active');
-  if (title) el('processingTitle').textContent = title;
-  if (msg) el('processingMsg').textContent = msg;
+async function loadPlan(){
+  const saved=await dbGet('kv','plan');
+  if(saved){currentPlan=saved.v;}
+  else{currentPlan=generatePlan();await savePlan();}
+  renderPlan();
 }
+async function savePlan(){ await dbPut('kv',{k:'plan',v:currentPlan}); }
 
-function updateProcessing(title, msg) {
-  el('processingTitle').textContent = title;
-  el('processingMsg').textContent = msg;
-}
-
-function showResult(w) {
-  el('resultCard').classList.add('active');
-  el('resultName').textContent = w.name || w.fileName?.replace(/\.(gpx|fit)$/i,'') || 'Corrida';
-  el('resultDate').textContent = new Date(w.date).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'});
-  el('rsDist').textContent = w.distKm.toFixed(1);
-  el('rsPace').textContent = fmtPace(w.paceSec);
-  el('rsHR').textContent = w.avgHR || '—';
-
-  // Insight
-  const diff = w.paceSec - settings.targetPaceSec;
-  let insight = '';
-  if (diff < -20) insight = `<strong>🔥 Acima do alvo!</strong> Você rodou ${fmtPace(Math.abs(diff))} mais rápido que o pace alvo. Consistência assim vai baixar o alvo em breve.`;
-  else if (diff < 10) insight = `<strong>✅ No alvo.</strong> Pace de ${fmtPace(w.paceSec)} está exatamente onde deveria estar. Continue assim.`;
-  else if (diff < 40) insight = `<strong>📍 Próximo do alvo.</strong> ${fmtPace(diff)} acima do pace alvo. Normal, especialmente em treinos fáceis ou com elevação.`;
-  else insight = `<strong>🔄 Abaixo do alvo.</strong> Pace de ${fmtPace(w.paceSec)} — faz parte da periodização. Os treinos longos e fáceis devem ser assim.`;
-  if (w.eleGain > 60) insight += ` Elevação de +${w.eleGain}m pode ter puxado o pace para cima.`;
-  el('resultInsight').innerHTML = insight;
-}
-
-function showAdjustments(changes) {
-  if (!changes.length) return;
-  el('adjustmentCard').classList.add('active');
-  el('adjChanges').innerHTML = changes.map(c =>
-    `<div class="adj-change">
-      <span class="ch-day">${c.day}</span>
-      <span class="ch-text">${c.text}</span>
-    </div>`
-  ).join('');
-}
-
-// ─── Plan Render ─────────────────────────────────────────────────
-function renderPlan() {
-  if (!currentPlan) return;
-  const pm2 = Math.floor(settings.targetPaceSec/60), ps2 = settings.targetPaceSec%60;
-  el('planTitle').textContent = `PLANO ${pm2}:${String(ps2).padStart(2,'0')}`;
-  const d = new Date(currentPlan.updatedAt);
-  el('planVersion').textContent = `v${currentPlan.version} · atualizado ${d.toLocaleDateString('pt-BR')}`;
-
-  el('planDays').innerHTML = currentPlan.days.map(d =>
-    `<div class="plan-day">
-      <div class="pd-day">${d.day}</div>
-      <div class="pd-info">
+function renderPlan(){
+  if(!currentPlan)return;
+  el('planTitle').textContent=currentPlan.title;
+  el('planVer').textContent=`v${currentPlan.version} · ${new Date(currentPlan.updatedAt).toLocaleDateString('pt-BR')}`;
+  el('planDays').innerHTML=currentPlan.days.map(d=>`
+    <div class="plan-day">
+      <div class="pd-name">${d.day}</div>
+      <div class="pd-body">
         <div class="pd-title">${d.title}</div>
         <div class="pd-desc">${d.desc}</div>
       </div>
-      <span class="pd-badge ${d.badge}">${badgeLabel(d.type, d.badge)}</span>
-    </div>`
-  ).join('');
+      <span class="pd-badge ${d.badge}">${badgeLabel(d.type,d.badge)}</span>
+    </div>`).join('');
+}
+function badgeLabel(type,badge){
+  if(badge==='b-upd')return '✦ ajust.';
+  return{easy:'fácil',tempo:'tempo',interval:'tiros',long:'longo',rest:'rest'}[type]||type;
 }
 
-function badgeLabel(type, badge) {
-  if (badge === 'badge-updated') return '✦ ajustado';
-  return { easy:'fácil', tempo:'tempo', interval:'interval', long:'longo', rest:'descanso' }[type] || type;
-}
+function adjustPlan(w, allW) {
+  const t=S.targetPaceSec;
+  const pm=fmtPace;
+  const changes=[];let changed=false;
+  const recent=allW.filter(x=>x.uploadType==='new').slice(-5);
+  const paceVsTarget=w.paceSec-t;
+  const hrPct=w.avgHR&&S.hrmax?w.avgHR/S.hrmax:null;
+  // GAP vs pace: if significant elevation, use GAP
+  const effectivePace=w.eleGain>40?w.gapSec:w.paceSec;
+  const effectiveDiff=effectivePace-t;
 
-// ─── History Render ──────────────────────────────────────────────
-async function renderHistory() {
-  const all = await dbGetAll('workouts');
-  all.sort((a,b) => new Date(b.date) - new Date(a.date));
-  const list = el('historyList');
-  if (!all.length) {
-    list.innerHTML = `<div class="empty-state">
-      <div class="es-icon">🏃</div>
-      <p>Nenhum treino ainda.<br>Faça upload do primeiro arquivo GPX ou FIT.</p>
-    </div>`;
-    return;
+  // 1. Consistently fast (GAP-adjusted)
+  if(effectiveDiff<-25&&recent.length>=2){
+    const newT=Math.max(t-5,200);
+    S.targetPaceSec=newT;saveSettings();
+    currentPlan=generatePlan();changed=true;
+    changes.push({day:'Todos',text:`Pace alvo: ${pm(t)} → <em>${pm(newT)}</em> (baseado em pace ajustado por altimetria)`});
   }
-  list.innerHTML = all.map(w =>
-    `<div class="history-item">
-      <div class="history-icon">🏃</div>
-      <div class="history-info">
-        <div class="history-title">${w.name || w.fileName || 'Corrida'}</div>
-        <div class="history-meta">${new Date(w.date).toLocaleDateString('pt-BR', {day:'2-digit',month:'short',year:'numeric'})} · ${w.distKm.toFixed(2)} km · ${fmtDur(w.movingTimeSec)}</div>
-      </div>
-      <div class="history-stats">
-        <div class="history-pace">${fmtPace(w.paceSec)}</div>
-        <div class="history-dist">${w.avgHR ? '♥ '+w.avgHR : ''}</div>
-      </div>
-      <button class="delete-btn" onclick="deleteWorkout('${w.id}')">✕</button>
-    </div>`
-  ).join('');
-}
-
-async function deleteWorkout(id) {
-  if (!confirm('Apagar este treino?')) return;
-  await dbDelete('workouts', id);
-  renderHistory();
-  updateStats();
-  updateStorage();
-  toast('Treino removido');
-}
-
-// ─── Stats ───────────────────────────────────────────────────────
-async function updateStats() {
-  const all = await dbGetAll('workouts');
-  if (!all.length) return;
-  const totalKm = all.reduce((a,w)=>a+w.distKm,0);
-  const avgPace = all.reduce((a,w)=>a+w.paceSec,0)/all.length;
-  const hrAll = all.filter(w=>w.avgHR).map(w=>w.avgHR);
-  const avgHR = hrAll.length ? Math.round(hrAll.reduce((a,b)=>a+b,0)/hrAll.length) : null;
-
-  el('statRuns').textContent = all.length;
-  el('statKm').textContent = Math.round(totalKm);
-  el('statAvgPace').textContent = fmtPace(Math.round(avgPace));
-  el('statAvgHR').textContent = avgHR || '—';
-
-  // VO2 estimate from best recent pace
-  const recent = all.slice(-3);
-  if (recent.length) {
-    const bestPace = Math.min(...recent.map(w=>w.paceSec));
-    const speedKmh = 3600 / bestPace;
-    const vo2 = Math.round(speedKmh * 3.5);
-    settings.vo2max = vo2;
-    saveSettings();
+  // 2. HR too high
+  if(hrPct&&hrPct>0.92&&Math.abs(effectiveDiff)<35){
+    const idx=currentPlan.days.findIndex(d=>d.type==='easy');
+    if(idx>=0){
+      currentPlan.days[idx].desc=`7 km a ${pm(t+90)} · recuperação · HR < ${Math.round(S.hrmax*0.68)} bpm`;
+      currentPlan.days[idx].badge='b-upd';changed=true;
+      changes.push({day:currentPlan.days[idx].day,text:`FC elevada (${w.avgHR} bpm = ${Math.round(hrPct*100)}% HRmax). Corrida fácil aliviada.`});
+    }
   }
+  // 3. Pace too slow
+  if(effectiveDiff>45&&recent.length>=3){
+    const idx=currentPlan.days.findIndex(d=>d.type==='long');
+    if(idx>=0){
+      currentPlan.days[idx].desc=`12–14 km a ${pm(t+90)} · base aeróbica`;
+      currentPlan.days[idx].badge='b-upd';changed=true;
+      changes.push({day:currentPlan.days[idx].day,text:`Pace abaixo do alvo. Long run aumentado para construir base.`});
+    }
+  }
+  // 4. Great form → push intervals
+  if(effectiveDiff<12&&hrPct&&hrPct<0.87){
+    const idx=currentPlan.days.findIndex(d=>d.type==='interval');
+    if(idx>=0){
+      const tiro=Math.round((t-20)*0.8);
+      const tmm=Math.floor(tiro/60),tss=String(tiro%60).padStart(2,'0');
+      currentPlan.days[idx].desc=`8× 800m a ${pm(t-20)} · tempo alvo: ${tmm}:${tss} · 90s caminhada`;
+      currentPlan.days[idx].badge='b-upd';changed=true;
+      changes.push({day:currentPlan.days[idx].day,text:`Ótimo desempenho com FC controlada. Intervalados: <em>8 repetições</em>.`});
+    }
+  }
+  // 5. High elevation → reinforce rest
+  if(w.eleGain>90){
+    const idx=currentPlan.days.findIndex(d=>d.type==='rest'&&d.day==='Sexta');
+    if(idx>=0){
+      currentPlan.days[idx].desc=`Descanso total reforçado — altimetria alta no último treino (+${w.eleGain}m)`;
+      changed=true;
+      changes.push({day:'Sexta',text:`Ganho de elevação alto (+${w.eleGain}m). Descanso de sexta reforçado.`});
+    }
+  }
+  // 6. Sprints detected → add sprint note
+  if(w.sprints&&w.sprints.length>0){
+    const idx=currentPlan.days.findIndex(d=>d.type==='interval');
+    if(idx>=0&&!changed){
+      const best=w.sprints.reduce((a,b)=>b.paceSec<a.paceSec?b:a,w.sprints[0]);
+      currentPlan.days[idx].desc+=` · melhor tiro detectado: ${fmtPace(best.paceSec)} em ${best.distM}m`;
+      changed=true;
+    }
+  }
+  if(changed){currentPlan.version=(currentPlan.version||1)+1;currentPlan.updatedAt=Date.now();savePlan();}
+  return changes;
+}
 
-  // Trend chart
-  const last8 = all.slice(-8);
-  const maxPace = Math.max(...last8.map(w=>w.paceSec));
-  const minPace = Math.min(...last8.map(w=>w.paceSec));
-  const range = maxPace - minPace || 1;
-  el('trendBars').innerHTML = last8.map((w, i) => {
-    const height = Math.round(((maxPace - w.paceSec) / range) * 70 + 10);
-    const isCurrent = i === last8.length - 1;
-    return `<div class="chart-bar-wrap">
-      <div class="chart-bar ${isCurrent?'current':''}" style="height:${height}px"></div>
-      <div class="chart-bar-label">${fmtPace(w.paceSec)}</div>
+// ── Upload type ─────────────────────────────────
+let uploadType='new';
+function setUploadType(t){
+  uploadType=t;
+  el('utt-new').classList.toggle('active',t==='new');
+  el('utt-base').classList.toggle('active',t==='base');
+  el('uploadTypeDesc').textContent=t==='new'
+    ?'Envie o arquivo do treino que você acabou de fazer. O app vai analisar e ajustar seu plano.'
+    :'Envie arquivos de treinos anteriores para enriquecer o histórico. O plano não será ajustado.';
+  el('uploadZoneTitle').textContent=t==='new'?'Treino novo':'Dados históricos';
+}
+
+// ── File Handling (BUG FIXED) ───────────────────
+// Fix: use one-shot event listener, reset input after use
+function setupFileInput(){
+  const input=el('fileInput');
+  input.addEventListener('change', function handler(e){
+    input.removeEventListener('change',handler);
+    const files=e.target.files;
+    if(files&&files.length) handleFile(files[0]);
+    // Reset input so same file can be re-uploaded and no double trigger
+    input.value='';
+    // Re-attach after delay to avoid double fire
+    setTimeout(setupFileInput,300);
+  },{once:true});
+}
+
+const uploadZone=document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('drag')});
+uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('drag'));
+uploadZone.addEventListener('drop',e=>{
+  e.preventDefault();uploadZone.classList.remove('drag');
+  if(e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+});
+
+async function handleFile(file){
+  if(!file)return;
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['gpx','fit'].includes(ext)){toast('Use arquivos GPX ou FIT');return;}
+
+  // Hide upload zone, show spinner
+  uploadZone.style.display='none';
+  el('resultCard').classList.remove('active');
+  el('sprintCard').style.display='none';
+  el('adjCard').classList.remove('active');
+  showSpinner(true,'Lendo arquivo…',file.name);
+
+  try {
+    let workout;
+    if(ext==='gpx'){
+      const text=await file.text();
+      spinMsg('Parseando GPS…','calculando pace com correção de GPS rate');
+      await delay(200);
+      workout=parseGPX(text);
+    } else {
+      const buf=await file.arrayBuffer();
+      spinMsg('Decodificando FIT…','formato binário Garmin');
+      await delay(200);
+      workout=parseFIT(buf);
+    }
+
+    workout.id=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    workout.fileName=file.name;
+    workout.uploadType=uploadType;
+
+    spinMsg('Salvando…','persistindo no IndexedDB');
+    await delay(150);
+    await dbPut('workouts',workout);
+
+    // Auto-prune: keep max 60 workouts
+    const all=await dbAll('workouts');
+    if(all.length>60){
+      all.sort((a,b)=>new Date(a.date)-new Date(b.date));
+      for(const w of all.slice(0,all.length-60)) await dbDel('workouts',w.id);
+    }
+
+    if(uploadType==='new'){
+      spinMsg('Ajustando plano…','analisando tendências e altimetria');
+      await delay(300);
+      const allW=await dbAll('workouts');
+      allW.sort((a,b)=>new Date(a.date)-new Date(b.date));
+      const changes=adjustPlan(workout,allW);
+      renderPlan();
+      updateStats();
+      showSpinner(false);
+      showResult(workout);
+      showSprints(workout.sprints||[]);
+      showAdj(changes);
+    } else {
+      updateStats();
+      showSpinner(false);
+      toast('Dados históricos salvos!');
+    }
+
+  } catch(err){
+    showSpinner(false);
+    toast('Erro: '+err.message);
+    console.error(err);
+  } finally {
+    uploadZone.style.display='';
+  }
+}
+
+function showSpinner(active,title='',msg=''){
+  el('spinnerWrap').classList.toggle('active',active);
+  if(title)el('spinTitle').textContent=title;
+  if(msg)el('spinMsg').textContent=msg;
+}
+function spinMsg(t,m){el('spinTitle').textContent=t;el('spinMsg').textContent=m;}
+
+function showResult(w){
+  el('resultCard').classList.add('active');
+  el('resultName').textContent=sanitize(w.name||w.fileName||'Corrida');
+  el('resultDate').textContent=new Date(w.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
+  el('rsDist').textContent=w.distKm.toFixed(2);
+  el('rsPace').textContent=fmtPace(w.paceSec);
+  el('rsHR').textContent=w.avgHR||'—';
+
+  const diff=w.paceSec-S.targetPaceSec;
+  const gapNote=w.eleGain>30?` · GAP (c/ altim.): ${fmtPace(w.gapSec)}`:'';
+  let ins='';
+  if(diff<-20) ins=`<strong>🔥 Acima do alvo!</strong> ${fmtPace(Math.abs(diff))} mais rápido que o pace alvo${gapNote}.`;
+  else if(diff<12) ins=`<strong>✅ No alvo.</strong> Pace ${fmtPace(w.paceSec)} — exatamente onde deveria estar${gapNote}.`;
+  else if(diff<45) ins=`<strong>📍 Próximo do alvo.</strong> ${fmtPace(diff)} acima${gapNote}. Pode ser efeito da altimetria (+${w.eleGain}m).`;
+  else ins=`<strong>🔄 Treino leve.</strong> Pace ${fmtPace(w.paceSec)}${gapNote} — parte da periodização.`;
+  if(w.gpsRate>5) ins+=` <span style="color:var(--yellow)">⚠ GPS atualiza a cada ${w.gpsRate}s — pace calculado com correção de taxa.</span>`;
+  el('resultInsight').innerHTML=ins;
+}
+
+function showSprints(sprints){
+  if(!sprints||!sprints.length){ el('sprintCard').style.display='none'; return; }
+  el('sprintCard').style.display='';
+  el('sprintCount').textContent=sprints.length+' tiro'+(sprints.length>1?'s':'')+' detectado'+(sprints.length>1?'s':'');
+  el('sprintList').innerHTML=sprints.map(s=>{
+    const tiro=`${Math.floor(s.timeSec/60)}:${String(s.timeSec%60).padStart(2,'0')}`;
+    return `<div class="sprint-row">
+      <div class="sprint-n">#${s.n}</div>
+      <div class="sprint-info">
+        <div class="sprint-dist">${s.distM}m</div>
+        <div class="sprint-meta">${s.avgHR?`♥ ${s.avgHR} bpm avg · max ${s.maxHR||'—'}`:''}</div>
+      </div>
+      <div class="sprint-vals">
+        <div class="sprint-pace">${fmtPace(s.paceSec)}</div>
+        <div class="sprint-time">⏱ ${tiro}</div>
+        <div class="sprint-hr">/km</div>
+      </div>
     </div>`;
   }).join('');
 }
 
-// ─── Storage ─────────────────────────────────────────────────────
-async function updateStorage() {
-  const all = await dbGetAll('workouts');
-  const size = JSON.stringify(all).length;
-  const kb = (size / 1024).toFixed(1);
-  const maxKB = 5000;
-  const pct = Math.min((size/1024/maxKB)*100, 100);
-
-  el('storageText').textContent = `${kb} KB`;
-  el('storageFiles').textContent = `${all.length} treinos salvos`;
-  const fill = el('storageFill');
-  fill.style.width = pct + '%';
-  fill.className = 'storage-fill' + (pct>80?' danger':pct>60?' warn':'');
+function showAdj(changes){
+  if(!changes||!changes.length)return;
+  el('adjCard').classList.add('active');
+  el('adjList').innerHTML=changes.map(c=>`<div class="adj-change"><span class="adj-day">${c.day}</span><span class="adj-text">${c.text}</span></div>`).join('');
 }
 
-async function pruneOldWorkouts() {
-  const all = await dbGetAll('workouts');
-  const cutoff = Date.now() - 90*24*60*60*1000;
-  const old = all.filter(w => new Date(w.date).getTime() < cutoff);
-  if (!old.length) { toast('Nenhum treino com mais de 90 dias'); return; }
-  if (!confirm(`Remover ${old.length} treino(s) com mais de 90 dias?`)) return;
-  for (const w of old) await dbDelete('workouts', w.id);
-  renderHistory();
-  updateStats();
-  updateStorage();
-  toast(`${old.length} treino(s) removido(s)`);
+// ── History ─────────────────────────────────────
+async function renderHistory(){
+  const all=await dbAll('workouts');
+  all.sort((a,b)=>new Date(b.date)-new Date(a.date));
+  const list=el('histList');
+  if(!all.length){
+    list.innerHTML=`<div class="empty-state"><div class="ei">🏃</div><p>Nenhum treino ainda.<br>Faça upload do primeiro arquivo GPX ou FIT.</p></div>`;
+    return;
+  }
+  list.innerHTML=all.map(w=>`
+    <div class="hist-item" onclick="openWorkout('${w.id}')">
+      <div class="hist-icon">🏃</div>
+      <div class="hist-info">
+        <div class="hist-title">
+          <span class="hist-tag ${w.uploadType==='new'?'tag-new':'tag-base'}">${w.uploadType==='new'?'novo':'histórico'}</span>
+          ${sanitize(w.name||w.fileName||'Corrida')}
+        </div>
+        <div class="hist-meta">${new Date(w.date).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'})} · ${w.distKm.toFixed(2)} km · ${fmtDur(w.movingTimeSec)}</div>
+      </div>
+      <div class="hist-right">
+        <div class="hist-pace">${fmtPace(w.paceSec)}</div>
+        <div class="hist-dist">${w.avgHR?'♥ '+w.avgHR:''}</div>
+      </div>
+      <button class="del-btn" onclick="event.stopPropagation();deleteWorkout('${w.id}')">✕</button>
+    </div>`).join('');
 }
 
-async function confirmClearAll() {
-  if (!confirm('Apagar TODOS os dados? Essa ação não pode ser desfeita.')) return;
-  const all = await dbGetAll('workouts');
-  for (const w of all) await dbDelete('workouts', w.id);
-  await dbDelete('settings', 'profile');
-  await dbDelete('plan', 'current');
-  settings = { name:'Corredor', age:23, targetPaceSec:254, days:5, hrmax:197, vo2max:57 };
-  currentPlan = generateBasePlan();
-  await savePlan();
-  renderSettings();
-  renderPlan();
-  renderHistory();
-  updateStats();
-  updateStorage();
-  toast('Dados apagados');
+async function deleteWorkout(id){
+  if(!confirm('Apagar este treino?'))return;
+  await dbDel('workouts',id);
+  renderHistory();updateStats();updateStorage();toast('Removido');
 }
 
-// ─── UI Utils ────────────────────────────────────────────────────
-function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t,i) => {
-    const names = ['upload','plan','history','stats','settings'];
-    t.classList.toggle('active', names[i] === name);
+// ── Workout Detail Modal ────────────────────────
+async function openWorkout(id){
+  const w=await dbGet('workouts',id);
+  if(!w){toast('Treino não encontrado');return;}
+  el('modalTitle').textContent=sanitize(w.name||w.fileName||'Corrida');
+
+  const splits=w.splits||[];
+  const sprints=w.sprints||[];
+
+  const paces=splits.map(s=>s.paceSec);
+  const minP=paces.length?Math.min(...paces):1;
+  const maxP=paces.length?Math.max(...paces):1;
+
+  let html=`
+  <div class="slabel">Resumo</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem">
+    <div class="stat-box sb-accent" style="text-align:center"><div class="sb-v">${w.distKm.toFixed(2)}</div><div class="sb-l">km</div></div>
+    <div class="stat-box" style="text-align:center"><div class="sb-v" style="color:var(--accent)">${fmtPace(w.paceSec)}</div><div class="sb-l">pace</div></div>
+    <div class="stat-box" style="text-align:center"><div class="sb-v">${fmtDur(w.movingTimeSec)}</div><div class="sb-l">tempo</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem;margin-bottom:1rem">
+    <div class="stat-box" style="text-align:center"><div class="sb-v sb-green" style="color:var(--green)">${w.avgHR||'—'}</div><div class="sb-l">FC med</div></div>
+    <div class="stat-box" style="text-align:center"><div class="sb-v">${w.maxHR||'—'}</div><div class="sb-l">FC max</div></div>
+    <div class="stat-box" style="text-align:center"><div class="sb-v" style="color:var(--blue)">+${w.eleGain}m</div><div class="sb-l">elevação</div></div>
+  </div>`;
+
+  if(w.gapSec&&w.eleGain>20){
+    html+=`<div style="font-family:var(--mono);font-size:.62rem;color:var(--muted);margin-bottom:1rem;line-height:1.6">
+      📐 Pace ajustado por altimetria (GAP): <strong style="color:var(--orange)">${fmtPace(w.gapSec)}</strong> · GPS taxa: ${w.gpsRate||1}s/ponto
+    </div>`;
+  }
+
+  if(splits.length){
+    html+=`<div class="slabel">Parciais por km</div>
+    <div style="margin-bottom:1rem">
+      <div style="display:grid;grid-template-columns:40px 1fr 65px 65px 55px;gap:.5rem;font-family:var(--mono);font-size:.52rem;color:var(--muted);padding:.4rem 0;border-bottom:1px solid var(--border);margin-bottom:.25rem">
+        <span>km</span><span>barra</span><span style="text-align:right">pace</span><span style="text-align:right">tempo</span><span style="text-align:right">FC</span>
+      </div>
+      ${splits.map(s=>{
+        const barPct=maxP>minP?Math.round(((maxP-s.paceSec)/(maxP-minP))*80+20):60;
+        const col=s.paceSec<S.targetPaceSec?'var(--accent)':s.paceSec<S.targetPaceSec+40?'var(--orange)':'var(--border)';
+        const tm=Math.floor(s.timeSec/60),ts=String(s.timeSec%60).padStart(2,'0');
+        return `<div class="split-row">
+          <span class="split-km">${s.partial?`~${(s.distM/1000).toFixed(2)}`:s.km}</span>
+          <div class="split-bar-wrap"><div class="split-bar-fill" style="width:${barPct}%;background:${col}"></div></div>
+          <span class="split-pace">${fmtPace(s.paceSec)}</span>
+          <span class="split-time">${tm}:${ts}</span>
+          <span class="split-hr">${s.avgHR?'♥'+s.avgHR:'—'}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  if(sprints.length){
+    html+=`<div class="slabel">⚡ Tiros detectados</div>`;
+    html+=sprints.map(s=>{
+      const t=`${Math.floor(s.timeSec/60)}:${String(s.timeSec%60).padStart(2,'0')}`;
+      return `<div class="sprint-row">
+        <div class="sprint-n">#${s.n}</div>
+        <div class="sprint-info"><div class="sprint-dist">${s.distM}m</div><div class="sprint-meta">${s.avgHR?`♥ ${s.avgHR} bpm`:''}</div></div>
+        <div class="sprint-vals"><div class="sprint-pace">${fmtPace(s.paceSec)}</div><div class="sprint-time">⏱ ${t}</div></div>
+      </div>`;
+    }).join('');
+  }
+
+  el('modalBody').innerHTML=html;
+  el('modalOverlay').classList.add('active');
+}
+
+function closeModal(e){ if(e.target===el('modalOverlay')) closeModalDirect(); }
+function closeModalDirect(){ el('modalOverlay').classList.remove('active'); }
+
+// ── Stats ───────────────────────────────────────
+async function updateStats(){
+  const all=await dbAll('workouts');
+  if(!all.length)return;
+  const totalKm=all.reduce((a,w)=>a+w.distKm,0);
+  const avgPace=all.reduce((a,w)=>a+w.paceSec,0)/all.length;
+  const hrs=all.filter(w=>w.avgHR).map(w=>w.avgHR);
+  const avgHR=hrs.length?Math.round(hrs.reduce((a,b)=>a+b,0)/hrs.length):null;
+
+  el('sRuns').textContent=all.length;
+  el('sKm').textContent=Math.round(totalKm);
+  el('sAvgPace').textContent=fmtPace(Math.round(avgPace));
+  el('sHR').textContent=avgHR||'—';
+
+  // VO2 estimate from best 3 recent workouts
+  const newOnly=all.filter(w=>w.uploadType==='new').slice(-3);
+  if(newOnly.length){
+    const best=Math.min(...newOnly.map(w=>w.paceSec));
+    const spd=3600/best;
+    S.vo2max=Math.min(80,Math.round(spd*3.5));
+    saveSettings();
+  }
+
+  // Trend
+  const last8=all.slice(-8);
+  const maxPc=Math.max(...last8.map(w=>w.paceSec));
+  const minPc=Math.min(...last8.map(w=>w.paceSec));
+  const rng=maxPc-minPc||1;
+  el('trendBars').innerHTML=last8.map((w,i)=>{
+    const h=Math.round(((maxPc-w.paceSec)/rng)*60+10);
+    return `<div class="bar-wrap"><div class="bar ${i===last8.length-1?'cur':''}" style="height:${h}px"></div><div class="bar-lbl">${fmtPace(w.paceSec)}</div></div>`;
+  }).join('');
+}
+
+function renderHRZones(){
+  const hm=S.hrmax;
+  const zones=[
+    {name:'Z1 · Recuperação',range:`< ${Math.round(hm*0.6)} bpm`,desc:'Caminhada, aquecimento',col:'var(--blue)'},
+    {name:'Z2 · Aeróbico',range:`${Math.round(hm*0.6)}–${Math.round(hm*0.7)} bpm`,desc:'Corrida fácil, base',col:'var(--green)'},
+    {name:'Z3 · Moderado',range:`${Math.round(hm*0.7)}–${Math.round(hm*0.8)} bpm`,desc:'Zona cinza — evitar',col:'var(--yellow)'},
+    {name:'Z4 · Limiar',range:`${Math.round(hm*0.8)}–${Math.round(hm*0.9)} bpm`,desc:'Tempo run, pace alvo',col:'var(--orange)'},
+    {name:'Z5 · Máximo',range:`> ${Math.round(hm*0.9)} bpm`,desc:'Intervalados, tiros',col:'var(--accent)'},
+  ];
+  el('hrZones').innerHTML=zones.map(z=>`<div class="hz"><div class="hz-name">${z.name}</div><div class="hz-range" style="color:${z.col}">${z.range}</div><div class="hz-desc">${z.desc}</div></div>`).join('');
+}
+
+// ── Storage ─────────────────────────────────────
+async function updateStorage(){
+  const all=await dbAll('workouts');
+  const sz=JSON.stringify(all).length;
+  const kb=(sz/1024).toFixed(1);
+  const pct=Math.min((sz/1024/5000)*100,100);
+  el('storageText').textContent=`${kb} KB`;
+  el('storageFiles').textContent=`${all.length} treinos salvos`;
+  const f=el('storageFill');
+  f.style.width=pct+'%';
+  f.className='storage-fill'+(pct>80?' danger':pct>60?' warn':'');
+}
+
+async function pruneOld(){
+  const all=await dbAll('workouts');
+  const cut=Date.now()-90*24*60*60*1000;
+  const old=all.filter(w=>new Date(w.date).getTime()<cut);
+  if(!old.length){toast('Nenhum treino com +90 dias');return;}
+  if(!confirm(`Remover ${old.length} treino(s) com mais de 90 dias?`))return;
+  for(const w of old) await dbDel('workouts',w.id);
+  renderHistory();updateStats();updateStorage();toast(`${old.length} removido(s)`);
+}
+
+async function clearAll(){
+  if(!confirm('Apagar TODOS os dados? Não pode ser desfeito.'))return;
+  const all=await dbAll('workouts');
+  for(const w of all) await dbDel('workouts',w.id);
+  await dbDel('kv','settings');await dbDel('kv','plan');await dbDel('kv','onboarded');
+  location.reload();
+}
+
+// ── UI Utils ────────────────────────────────────
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const names=['upload','plan','history','stats','settings'];
+    t.classList.toggle('active',names[i]===name);
   });
-  document.querySelectorAll('.page').forEach(p => {
-    p.classList.toggle('active', p.id === 'page-'+name);
+  document.querySelectorAll('.page').forEach(p=>{
+    p.classList.toggle('active',p.id==='page-'+name);
   });
-  if (name === 'history') renderHistory();
-  if (name === 'stats') updateStats();
-  if (name === 'settings') updateStorage();
+  if(name==='history')renderHistory();
+  if(name==='stats'){updateStats();renderSettings();}
+  if(name==='settings'){updateStorage();renderSettings();}
 }
 
-function el(id) { return document.getElementById(id); }
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-function fmtPace(sec) {
-  if (!sec || isNaN(sec)) return '—:——';
-  return `${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`;
-}
-function fmtDur(sec) {
-  if (!sec) return '—';
-  const m = Math.floor(sec/60), s = sec%60;
-  return m > 60 ? `${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}` : `${m}:${String(s).padStart(2,'0')}`;
-}
-function toast(msg) {
-  const t = el('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
-}
+function el(id){return document.getElementById(id)}
+function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+function fmtPace(sec){if(!sec||isNaN(sec))return'—:——';return`${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`}
+function fmtDur(sec){if(!sec)return'—';const m=Math.floor(sec/60),s=sec%60;return m>60?`${Math.floor(m/60)}h${String(m%60).padStart(2,'0')}m`:`${m}:${String(s).padStart(2,'0')}`}
+function toast(msg){const t=el('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
-// Drag & drop
-const zone = el('uploadZone');
-zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag'); });
-zone.addEventListener('dragleave', () => zone.classList.remove('drag'));
-zone.addEventListener('drop', e => {
-  e.preventDefault();
-  zone.classList.remove('drag');
-  handleFiles(e.dataTransfer.files);
-});
-
-// ─── Init ────────────────────────────────────────────────────────
-async function init() {
+// ── Init ────────────────────────────────────────
+async function init(){
   await openDB();
   await loadSettings();
-  await loadPlan();
-  await updateStats();
-  await updateStorage();
 
-  // Register SW
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+  const onboarded=await dbGet('kv','onboarded');
+  if(onboarded&&onboarded.v){
+    el('onboardOverlay').classList.add('hidden');
+    el('appShell').style.display='';
+    await loadPlan();
+    updateStats();
+    updateStorage();
+  }
+  // else: onboarding is already visible by default
+
+  setupFileInput();
+
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
   }
 }
 
